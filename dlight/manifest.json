@@ -3,16 +3,16 @@
     "header": {
         "description": "Dachte Light resource pack",
         "name": "DLight",
-        "uuid": "a276c7ed-a4f2-4830-ae72-0192b089aac0",
-        "version": [0, 0, 6],
+        "uuid": "ec265b0e-b6b3-4cc5-bb88-88936d71c876",
+        "version": [0, 0, 7],
         "min_engine_version": [ 1, 16, 200 ]
     },
     "modules": [
         {
             "description": "Dachte Light resource pack",
             "type": "resources",
-            "uuid": "07979fd0-8c99-4d73-b9ec-73fdf6fca9f0",
-            "version": [0, 0, 6]
+            "uuid": "d3afb544-5850-46b8-9d26-58f12a9f836b",
+            "version": [0, 0, 7]
         }
     ],
     "metadata": {
