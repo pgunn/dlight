@@ -1,0 +1,27 @@
+DLight is a texture pack for Minecraft Bedrock.
+I'm intending it to eventually be PBR-enabled and to do a little bit of promotion,
+but for now I'm:
+A) Still learning how to do this efficiently and at all, and
+B) Just trying to scratch my biggest itches with existing texture packs and textures
+
+I'm a Linux user, and primarily intend to work on this on my workstation using GIMP
+and Python.
+
+Python will be used for:
+* Bumping the version string (DONE)
+* Refreshing the UUID (DONE)
+* Verifying that all textures mentioned in the json are present
+* And that all texture files are in the correct format, size, and so on
+
+==Making it installable==
+Remember that a .mcpack file, which minecraft will install when you double click on it, is
+just a zipfile with the manifest.json in the toplevel. So to make this thing installable,
+make your zipfile that way and just double-clock on it.
+
+==On Java==
+I have never had an install of Minecraft Java so I have no idea if this will work on that platform.
+
+==Useful references==
+* The current default texture pack - https://www.minecraft.net/en-us/addons (link is just above INSTALLATION INSTRUCTIONS)
+* Another texture pack on github - https://github.com/ZtechNetwork/MCBVanillaResourcePack
+* NVIDIA's docs and "pixelart" PBR texture pack - https://www.nvidia.com/en-us/geforce/guides/minecraft-rtx-texturing-guide/

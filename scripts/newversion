@@ -1,0 +1,63 @@
+#!/usr/bin/env python
+
+import argparse
+import code # for code.interact(local=dict(globals(), **locals()) ) debugging
+import os
+import re
+import uuid
+from typing import Dict, List, Tuple # for mypy
+
+######################
+# newversion
+#
+# Bump Minecraft extension versions/UUIDs
+# Eventually: Do any sanity checks we decide are reasonable
+# Maybe: Do any static computations that need doing
+
+def main():
+	cfg = handle_args()
+	manifest_fn = os.path.join(cfg.projdir, "manifest.json")
+	with open(manifest_fn, 'r') as man_r:
+		lines = man_r.readlines()
+	for n in range(len(lines)):
+		# Here we parse it line-by-line, so if you have anything you want to change, do it here
+		# Note that this is not a full parser; it's possible to reformat the file in ways that leave it
+		# valid JSON but not parsable by this. I am OK with that.
+		# XXX Consider actually parsing the json instead; might be simpler/more elegant
+		if re.search(r'\s*"uuid":\s*', lines[n]):
+			#print("Got here")
+			#print("Replacing " + lines[n])
+			lines[n] = re.sub(r'"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"', '"' + str(uuid.uuid4()) + '"', lines[n])
+			#print("With " + lines[n])
+		if re.search(r'\s*"version":\s*\[\d+\s*,\s*\d+\s*,\s*\d+\s*\]', lines[n]):
+			vmatch = re.search(r'\s*"version":\s*\[(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\]', lines[n])
+			v0, v1, v2 = vmatch.group(1), vmatch.group(2), vmatch.group(3)
+			if cfg.force_version:
+				raise Exception("Forcing version is not yet supported")
+			else:
+				v2 = str(int(v2) + 1)
+			version_string = '[' + str(v0) + ', ' + str(v1) + ', ' + str(v2) + ']'
+			lines[n] = re.sub(r'\[\d+\s*,\s*\d+\s*,\s*\d+\s*\]', version_string, lines[n])
+			#print(f"I found these version parts: {v0} {v1} {v2}")
+
+	# Add any other kinds of logic on the manifest here
+	if cfg.test:
+		print("Would rewrite manifest, contents would be:")
+		print("==========================================")
+		print(lines)
+		print("==========================================")
+	else:
+		with open(manifest_fn, 'w') as man_rw:
+			man_rw.write("".join(lines))
+	# Add any other other kinds of logic on the entire project dir here
+
+def handle_args():
+	parser = argparse.ArgumentParser(description="This bumps Minecraft extension versions and UUIDs")
+	parser.add_argument("projdir",	help="Project Dir")
+	parser.add_argument("--force_version", help="Force-set version to an X.Y.Z")
+	parser.add_argument("--test", action="store_true", help="Test run only")
+	ret = parser.parse_args()
+	return ret
+
+#####
+main()
