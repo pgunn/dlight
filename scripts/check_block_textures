@@ -1,0 +1,55 @@
+#!/usr/bin/env python
+
+import argparse
+import code # for code.interact(local=dict(globals(), **locals()) ) debugging
+import glob
+import json
+import os
+import PIL.Image
+from typing import Dict, List, Tuple # for mypy
+
+######################
+# check_block_textures
+#
+# Make sure block textures are present and in the proper format
+# We assume all textures are in png format.
+# I don't know if Minecraft supports any other formats, but if it does, we don't. Deal with it.
+
+def main():
+	cfg = handle_args()
+	texture_list_file = os.path.join(cfg.projdir, 'textures', 'textures_list.json')
+	block_texture_dir = os.path.join(cfg.projdir, 'textures', 'blocks')
+	# Check 1: Are all textures mentioned in textures_list present?
+	#          For this we don't restrict ourself to block textures.
+	with open(texture_list_file, 'r') as tlf:
+		tlf_json = json.load(tlf)
+		for texture in tlf_json: # We assume a flat list, for now
+			texture_pathparts = texture.split('/')
+			texture_nativepath = os.path.join(cfg.projdir, *texture_pathparts)
+			if not os.path.isfile(texture_nativepath + '.png'):
+				raise Exception(f"Could not find texture {texture} as {texture_nativepath}.png")
+	# Check 2: Are all the block textures in the right format?
+	#	For now we don't verify any other kinds of textures because we don't know
+	#	all the constraints on them
+	textures_to_check = glob.glob(os.path.join(block_texture_dir, '*.png'))
+	for texture in textures_to_check:
+		th = PIL.Image.open(texture)
+		if th.mode != 'RGBA':
+			raise Exception(f'Texturefile {texture} is not in RGBA format')
+		if th.size[0] != th.size[1]:
+			raise Exception(f'Texturefile {texture} does not have equal dimensions')
+		if th.size[0] > 32:
+			print(f"Warning: dimensionality of {th.size} for {texture} is large and may cause issues")
+	# Check 3 (for the future): verify the PBR features for the textures, if the texture pack
+	#	has PBR enabled. NOT YET IMPLEMENTED.
+	pass
+
+def handle_args():
+	parser = argparse.ArgumentParser(description="Check Block Textures")
+	parser.add_argument("projdir",	help="Project Dir")
+	parser.add_argument("--verbose",	action="store_true", help="Be noisier")
+	ret = parser.parse_args()
+	return ret
+
+#####
+main()

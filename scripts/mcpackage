@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+
+import argparse
+import code # for code.interact(local=dict(globals(), **locals()) ) debugging
+import json
+import os
+from typing import Dict, List, Tuple # for mypy
+import shutil
+
+######################
+# mcpackage - make an mcpackage from a directory
+#
+# Given a minecraft extension dir, this makes a properly named mcpack file for it
+# based on its metadata.
+#
+# The shutil dependency may not be very portable; if this turns out to be an issue,
+# we could rewrite to use the zipfile library instead (although its API requires a lot more
+# legwork from the caller)
+
+def main():
+	cfg = handle_args()
+	metadata_file = os.path.join(cfg.projdir, 'manifest.json')
+	with open(metadata_file, 'r') as mdfh:
+		metadata = json.load(mdfh)
+	version_tuple = metadata['header']['version']
+	version_tuple_str = map(lambda x: str(x), version_tuple)
+	desired_filename = metadata['header']['name'] + '-' + '.'.join(version_tuple_str)
+	if os.path.isfile(desired_filename + '.mcpack'):
+		raise Exception(f"Desired filename {desired_filename}.mcpack already exists, will not overwrite")
+	fn = shutil.make_archive(desired_filename, 'zip', cfg.projdir)
+	shutil.move(desired_filename + '.zip', desired_filename + '.mcpack')
+
+def handle_args():
+	parser = argparse.ArgumentParser(description="Turns a source tree into an mcpack file based on metadata")
+	parser.add_argument("projdir",	help="Project Dir")
+	parser.add_argument("--verbose",	action="store_true", help="Be noisier")
+	ret = parser.parse_args()
+	return ret
+
+#####
+main()
