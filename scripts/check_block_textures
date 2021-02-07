@@ -34,8 +34,11 @@ def main():
 	textures_to_check = glob.glob(os.path.join(block_texture_dir, '*.png'))
 	for texture in textures_to_check:
 		th = PIL.Image.open(texture)
-		if th.mode != 'RGBA':
-			raise Exception(f'Texturefile {texture} is not in RGBA format')
+		if '_mer' in texture:
+			if th.mode != 'RGB':
+				raise Exception(f'MER Texturefile {texture} is not in RGB format')
+		elif th.mode != 'RGBA':
+			raise Exception(f'Non-MER Texturefile {texture} is not in RGBA format')
 		if th.size[0] != th.size[1]:
 			raise Exception(f'Texturefile {texture} does not have equal dimensions')
 		if th.size[0] > 32:

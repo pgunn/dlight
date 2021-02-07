@@ -2,6 +2,7 @@
 
 import argparse
 import code # for code.interact(local=dict(globals(), **locals()) ) debugging
+import json
 import os
 import re
 import uuid
@@ -18,27 +19,17 @@ def main():
 	cfg = handle_args()
 	manifest_fn = os.path.join(cfg.projdir, "manifest.json")
 	with open(manifest_fn, 'r') as man_r:
-		lines = man_r.readlines()
-	for n in range(len(lines)):
-		# Here we parse it line-by-line, so if you have anything you want to change, do it here
-		# Note that this is not a full parser; it's possible to reformat the file in ways that leave it
-		# valid JSON but not parsable by this. I am OK with that.
-		# XXX Consider actually parsing the json instead; might be simpler/more elegant
-		if re.search(r'\s*"uuid":\s*', lines[n]):
-			#print("Got here")
-			#print("Replacing " + lines[n])
-			lines[n] = re.sub(r'"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"', '"' + str(uuid.uuid4()) + '"', lines[n])
-			#print("With " + lines[n])
-		if re.search(r'\s*"version":\s*\[\d+\s*,\s*\d+\s*,\s*\d+\s*\]', lines[n]):
-			vmatch = re.search(r'\s*"version":\s*\[(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\]', lines[n])
-			v0, v1, v2 = vmatch.group(1), vmatch.group(2), vmatch.group(3)
-			if cfg.force_version:
-				raise Exception("Forcing version is not yet supported")
-			else:
-				v2 = str(int(v2) + 1)
-			version_string = '[' + str(v0) + ', ' + str(v1) + ', ' + str(v2) + ']'
-			lines[n] = re.sub(r'\[\d+\s*,\s*\d+\s*,\s*\d+\s*\]', version_string, lines[n])
-			#print(f"I found these version parts: {v0} {v1} {v2}")
+		manifest = json.load(man_r)
+	manifest['header']['uuid'] = str(uuid.uuid4() )
+	manifest['modules'][0]['uuid'] = str(uuid.uuid4() )
+	if cfg.force_version:
+		raise Exception("Forcing version is not yet supported")
+	manifest['header']['version'][2] += 1
+	manifest['modules'][0]['version'][2] += 1
+	if "version:" in manifest['header']['description']:
+		manifest['header']['description'] = re.sub(r' version:.*', ' version:' + format_version_tuple(manifest['header']['version']), manifest['header']['description'])
+	else:
+		manifest['header']['description'] += " version:" + format_version_tuple(manifest['header']['version'])
 
 	# Add any other kinds of logic on the manifest here
 	if cfg.test:
@@ -48,7 +39,7 @@ def main():
 		print("==========================================")
 	else:
 		with open(manifest_fn, 'w') as man_rw:
-			man_rw.write("".join(lines))
+			json.dump(manifest, man_rw)
 	# Add any other other kinds of logic on the entire project dir here
 
 def handle_args():
@@ -58,6 +49,12 @@ def handle_args():
 	parser.add_argument("--test", action="store_true", help="Test run only")
 	ret = parser.parse_args()
 	return ret
+
+#########
+
+def format_version_tuple(intuple):
+	tuple_str = map(lambda x: str(x), intuple)
+	return '.'.join(tuple_str)
 
 #####
 main()
