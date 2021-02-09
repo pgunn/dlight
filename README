@@ -1,6 +1,5 @@
 DLight is a texture pack for Minecraft Bedrock.
-I'm intending it to eventually be PBR-enabled and to do a little bit of promotion,
-but for now I'm:
+For now I'm:
 A) Still learning how to do this efficiently and at all, and
 B) Just trying to scratch my biggest itches with existing texture packs and textures
 
@@ -11,7 +10,7 @@ Python will be used for:
 * Bumping the version string (DONE)
 * Refreshing the UUID (DONE)
 * Verifying that all textures mentioned in the json are present
-* And that all texture files are in the correct format, size, and so on
+* And that all texture files are in the correct format, size, and so on (PARTIAL)
 
 ==Making it installable==
 Remember that a .mcpack file, which minecraft will install when you double click on it, is

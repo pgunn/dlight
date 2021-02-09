@@ -1,6 +1,7 @@
 [
   "textures/blocks/cobblestone",
   "textures/blocks/stone",
+  "textures/blocks/stone_andesite",
   "textures/blocks/stone_diorite",
   "textures/blocks/stone_granite"
 ]
