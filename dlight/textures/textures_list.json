@@ -1,10 +1,11 @@
 [
   "textures/blocks/cobblestone",
+  "textures/blocks/gravel",
   "textures/blocks/stone",
   "textures/blocks/stone_andesite",
   "textures/blocks/stone_andesite_smooth",
   "textures/blocks/stone_diorite",
   "textures/blocks/stone_diorite_smooth",
-  "textures/blocks/stone_granite"
+  "textures/blocks/stone_granite",
   "textures/blocks/stone_granite_smooth"
 ]
