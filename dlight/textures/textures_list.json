@@ -1,6 +1,8 @@
 [
   "textures/blocks/cobblestone",
+  "textures/blocks/glass",
   "textures/blocks/gravel",
+  "textures/blocks/sand",
   "textures/blocks/stone",
   "textures/blocks/stone_andesite",
   "textures/blocks/stone_andesite_smooth",
