@@ -1,10 +1,13 @@
 [
   "textures/blocks/bedrock",
+  "textures/blocks/coal_ore",
   "textures/blocks/cobblestone",
   "textures/blocks/glass",
   "textures/blocks/gravel",
+  "textures/blocks/lapis_ore",
   "textures/blocks/netherrack",
   "textures/blocks/obsidian",
+  "textures/blocks/quartz_ore",
   "textures/blocks/sand",
   "textures/blocks/stone",
   "textures/blocks/stone_andesite",
