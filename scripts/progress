@@ -1,0 +1,82 @@
+#!/usr/bin/env python
+
+import argparse
+import code # for code.interact(local=dict(globals(), **locals()) ) debugging
+from collections import defaultdict
+import json
+import os
+import pprint
+import re
+from typing import Dict, List, Tuple # for mypy
+
+######################
+# progress
+#
+# Look at the texture pack as a whole and analyse its completeness as well as
+# help hint as to what to do next
+#
+# I recommend you download the nvidia art pack and unpack it as nvidia_pbr_example inside
+# your repo. If you unpack it somewhere else you will need to say where using the
+# --reference_list parameter. This file is needed to get a list of all textures.
+
+
+tfold_sides = ['top', 'side', 'front', 'bottom', 'back', 'inner', 'lower', 'inside', 'outside', 'outer']
+tfold_states = ['off', 'on', 'stage', '0', '1', '2', '3', '4', '5', '6', '7', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'powered', 'connected', 'disconnected', 'opaque']
+tfold_colours = ['black', 'blue', 'brown', 'cyan', 'gray', 'green', 'light', 'blue', 'lime', 'magenta', 'orange', 'pink', 'purple', 'red', 'silver', 'white', 'yellow', 'stained']
+tfold_misc = ['carried']
+
+def main():
+	cfg = handle_args()
+	manifest_file     = os.path.join(cfg.projdir, 'manifest.json')
+	texture_list_file = os.path.join(cfg.projdir, 'textures', 'textures_list.json')
+	block_texture_dir = os.path.join(cfg.projdir, 'textures', 'blocks')
+
+	manifest	= jload(manifest_file)
+	texture_list	= jload(texture_list_file)
+	texture_ref	= jload(cfg.reference_list)
+
+	# For now we're going to focus on block textures
+	texture_list = list(filter(lambda x: '/blocks/' in x, texture_list))
+	texture_ref  = list(filter(lambda x: '/blocks/' in x, texture_ref))
+
+	for texture_we_have in texture_list:
+		if texture_we_have not in texture_ref:
+			raise Exception(f"Extraneous texture {texture_we_have}")
+	print(f"Textures: {len(texture_list)} present of {len(texture_ref)} possible")
+	reducers = [*tfold_sides, *tfold_states, *tfold_colours, *tfold_misc]
+	#print(f"Reducers: {reducers}")
+
+	report = defaultdict(list)
+	todo = set(texture_ref) - set(texture_list)
+	print(f"Parsing: {len(todo)} entries")
+
+	for missing in todo:
+		miss = missing.split('/')[-1]
+		print(f"Parse {miss}")
+		if '_' not in miss:
+			report[miss] = [miss]
+			continue
+		miss_l = miss.split('_')
+		parent = '_'.join(filter(lambda x: x not in reducers, miss_l))
+		if parent == '': # Every single element is in tfold
+			raise Exception(f"Uh oh: {miss} ({missing})")
+		report[parent].append(miss)
+	pprint.pprint(dict(report))
+
+def handle_args():
+	parser = argparse.ArgumentParser(description="Check Block Textures")
+	parser.add_argument("projdir",	help="Project Dir")
+	parser.add_argument("--reference_list",	default="nvidia_pbr_example/textures/textures_list.json", help="Reference textures_list.json")
+	parser.add_argument("--verbose",	action="store_true", help="Be noisier")
+	ret = parser.parse_args()
+	return ret
+
+#####
+
+def jload(fn:str):
+	with open(fn, 'r') as fh:
+		ret = json.load(fh)
+	return ret
+
+#####
+main()
