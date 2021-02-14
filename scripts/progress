@@ -52,7 +52,7 @@ def main():
 
 	for missing in todo:
 		miss = missing.split('/')[-1]
-		print(f"Parse {miss}")
+		#print(f"Parse {miss}")
 		if '_' not in miss:
 			report[miss] = [miss]
 			continue

@@ -1,5 +1,6 @@
 [
   "textures/blocks/bedrock",
+  "textures/blocks/brick",
   "textures/blocks/coal_ore",
   "textures/blocks/cobblestone",
   "textures/blocks/crying_obsidian",
@@ -7,6 +8,7 @@
   "textures/blocks/gravel",
   "textures/blocks/iron_ore",
   "textures/blocks/lapis_ore",
+  "textures/blocks/nether_brick",
   "textures/blocks/netherrack",
   "textures/blocks/obsidian",
   "textures/blocks/quartz_ore",
