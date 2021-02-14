@@ -6,19 +6,28 @@ import glob
 import json
 import os
 import PIL.Image
+import re
 from typing import Dict, List, Tuple # for mypy
 
 ######################
 # check_block_textures
 #
 # Make sure block textures are present and in the proper format
-# We assume all textures are in png format.
-# I don't know if Minecraft supports any other formats, but if it does, we don't. Deal with it.
+# We assume all textures are in png or tga format.
 
 def main():
 	cfg = handle_args()
+	manifest_file     = os.path.join(cfg.projdir, 'manifest.json')
 	texture_list_file = os.path.join(cfg.projdir, 'textures', 'textures_list.json')
 	block_texture_dir = os.path.join(cfg.projdir, 'textures', 'blocks')
+
+	with open(manifest_file, 'r') as mfh:
+		manifest = json.load(mfh)
+	if 'capabilities' in manifest and 'raytraced' in manifest['capabilities']:
+		pbr_enabled = True
+	else:
+		pbr_enabled = False
+
 	# Check 1: Are all textures mentioned in textures_list present?
 	#          For this we don't restrict ourself to block textures.
 	with open(texture_list_file, 'r') as tlf:
@@ -26,12 +35,14 @@ def main():
 		for texture in tlf_json: # We assume a flat list, for now
 			texture_pathparts = texture.split('/')
 			texture_nativepath = os.path.join(cfg.projdir, *texture_pathparts)
-			if not os.path.isfile(texture_nativepath + '.png'):
+			if not os.path.isfile(texture_nativepath + '.png') and \
+                           not os.path.isfile(texture_nativepath + '.tga'):
 				raise Exception(f"Could not find texture {texture} as {texture_nativepath}.png")
 	# Check 2: Are all the block textures in the right format?
 	#	For now we don't verify any other kinds of textures because we don't know
 	#	all the constraints on them
-	textures_to_check = glob.glob(os.path.join(block_texture_dir, '*.png'))
+	textures_to_check = gather_texture_list(block_texture_dir)
+
 	for texture in textures_to_check:
 		th = PIL.Image.open(texture)
 		if '_mer' in texture:
@@ -41,17 +52,43 @@ def main():
 			raise Exception(f'Non-MER Texturefile {texture} is not in RGBA format')
 		if th.size[0] != th.size[1]:
 			raise Exception(f'Texturefile {texture} does not have equal dimensions')
-		if th.size[0] > 32:
+		if th.size[0] > 128:
 			print(f"Warning: dimensionality of {th.size} for {texture} is large and may cause issues")
 	# Check 3 (for the future): verify the PBR features for the textures, if the texture pack
 	#	has PBR enabled. NOT YET IMPLEMENTED.
-	pass
-
+	if pbr_enabled:
+		for texture in textures_to_check:
+			if '.png' in texture:
+				texture_mer = re.sub(r'\.png', '_mer.png', texture)
+				texture_set = re.sub(r'\.png', '.texture_set.json', texture)
+			elif '.tga' in texture:
+				texture_mer = re.sub(r'\.tga', '_mer.png', texture) # mers are always png
+				texture_set = re.sub(r'\.tga', '.texture_set.json', texture)
+			if not os.path.isfile(texture_mer):
+				raise Exception(f"Could not find mer for {texture}")
+			if not os.path.isfile(texture_set):
+				raise Exception(f"Could not find texture json for {texture}")
 def handle_args():
 	parser = argparse.ArgumentParser(description="Check Block Textures")
 	parser.add_argument("projdir",	help="Project Dir")
 	parser.add_argument("--verbose",	action="store_true", help="Be noisier")
 	ret = parser.parse_args()
+	return ret
+
+#####
+
+def gather_texture_list(scandir:str) -> List[str]:
+	# Look at all the png and tga files in a directory and filter down to those that
+	# should be textures, returning that list
+	# Note that technically all the extensions we're filtering out are just conventions
+	# and that the json file for a texture could use some other pattern. We depend on
+	# nobody doing that.
+	
+	ret =       glob.glob(os.path.join(scandir, '*.png'))
+	ret.append(*glob.glob(os.path.join(scandir, '*.tga')))
+	ret = filter(lambda x: '_mer.'       not in x, ret)
+	ret = filter(lambda x: '_normal.'    not in x, ret)
+	ret = filter(lambda x: '_heightmap.' not in x, ret)
 	return ret
 
 #####
