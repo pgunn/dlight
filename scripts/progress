@@ -61,7 +61,10 @@ def main():
 		if parent == '': # Every single element is in tfold
 			raise Exception(f"Uh oh: {miss} ({missing})")
 		report[parent].append(miss)
-	pprint.pprint(dict(report))
+	if cfg.verbose:
+		pprint.pprint(dict(report))
+	else:
+		print("\n\t".join(sorted(report.keys())))
 
 def handle_args():
 	parser = argparse.ArgumentParser(description="Check Block Textures")
