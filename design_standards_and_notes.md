@@ -95,5 +95,6 @@ Variant of netherrack with pale purple protrusions of mostly rounded shapes plac
 
 # Misc
 ## Bedrock
+![Bedrock](dlight/textures/blocks/bedrock.png?raw=true)
 
 Bedrock should have a mix of a feel of out-of-bounds and a spider electrical-mineral.
