@@ -75,7 +75,7 @@ Based on the obsidian texture, with pink-purple light coming out of the existing
 
 # Glasses
 ## Plain Glass (full pane)
-![Glass](dlight/textures/blocks/glass.png?raw=true)
+![Glass](dlight/textures/blocks/glass.tga?raw=true)
 Entirely transparent apart from the edges, which have 3 shades of grey on the boundaries representing the frame. Has 2 layers of small stylings in each corner that echo the corner with glass between, followed by a dot. In the upper-left styling there is a mistake (that turned out well) of a dot to the right of and between the stylings. This was going to be another suspended line echoing the top border; that idea was scrapped but the first dot was accidentally left in. The irregularity looks cool so it will not be touched out, and if this is ever redesigned it may be left in.
 
 ## Other full panes of glass
