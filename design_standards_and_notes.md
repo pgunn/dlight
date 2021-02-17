@@ -112,6 +112,17 @@ Cloudy yellow-brown based on real photographs of sand. Darker portions look a bi
 
 Based on standard sand, with a hue shift towards red.
 
+# Soul dirts
+##Soul Sand
+![Soul Sand](dlight/textures/blocks/soul_sand.png?raw=true)
+
+Deep red background with brighter faces at varying orientations embedded. Darker swirls around and between those faces. A small number of brown highlights. The face features themselves should emit a small amount of light.
+
+##Soul Soil
+![Soul Soil](dlight/textures/blocks/soul_soil.png?raw=true)
+
+Based off soul sand, with the faces removed and replaced by flatter, cracked areas. Red hue is significantly diminished. As face features are gone, so is the light emission.
+
 # Glazed Terracottas
 ## White Glazed Terracotta
 ![White Glazed Terracotta](dlight/textures/blocks/glazed_terracotta_white.png?raw=true)

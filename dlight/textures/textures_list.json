@@ -22,12 +22,14 @@
   "textures/blocks/red_sand",
   "textures/blocks/redstone_ore",
   "textures/blocks/sand",
+  "textures/blocks/soul_sand",
+  "textures/blocks/soul_soil",
   "textures/blocks/stone",
   "textures/blocks/stone_andesite",
   "textures/blocks/stone_andesite_smooth",
   "textures/blocks/stone_diorite",
   "textures/blocks/stone_diorite_smooth",
   "textures/blocks/stone_granite",
-  "textures/blocks/stone_granite_smooth"
+  "textures/blocks/stone_granite_smooth",
   "textures/blocks/web"
 ]
