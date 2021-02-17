@@ -157,3 +157,9 @@ Variant of netherrack with pale purple protrusions of mostly rounded shapes plac
 ![Bedrock](dlight/textures/blocks/bedrock.png?raw=true)
 
 Bedrock should have a mix of a feel of out-of-bounds and a spider electrical-mineral.
+
+## Glowstone
+![Glowstone](dlight/textures/blocks/glowstone.png?raw=true)
+
+Primarily yellow with 4 sine waves going across, each "leaning" forward or backwards. Some colour variations to keep things interesting.
+
