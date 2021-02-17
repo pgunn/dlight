@@ -134,6 +134,10 @@ Based on the standard texture very strongly for the blue portions (but higher re
 
 Based loosely on the original texture; many embellishments and differences. Maintains both the edge and diagonal symmetry of the original.
 
+## Orange Glazed Terracotta
+![Orange Glazed Terracotta](dlight/textures/blocks/glazed_terracotta_orange.png?raw=true)
+
+Based loosely on the original texture; many embellishments and differences. Maintains symmetries of the original.
 
 # Bricks
 ## Standard brick
