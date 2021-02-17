@@ -163,3 +163,9 @@ Bedrock should have a mix of a feel of out-of-bounds and a spider electrical-min
 
 Primarily yellow with 4 sine waves going across, each "leaning" forward or backwards. Some colour variations to keep things interesting.
 
+## Web
+![Web](dlight/textures/blocks/web_mer.png?raw=true)
+(the web texture is a TGA file and browsers cannot render that, so this is the PBR image instead. Ignore the colours)
+
+A fairly random/realistic looking spider web. Not particularly symmetric like the standard texture.
+
