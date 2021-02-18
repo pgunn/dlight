@@ -41,7 +41,7 @@ def main():
 
 	for texture_we_have in texture_list:
 		if texture_we_have not in texture_ref:
-			raise Exception(f"Extraneous texture {texture_we_have}")
+			print(f"Warning: Extraneous texture {texture_we_have}")
 	print(f"Textures: {len(texture_list)} present of {len(texture_ref)} possible")
 	reducers = [*tfold_sides, *tfold_states, *tfold_colours, *tfold_misc]
 	#print(f"Reducers: {reducers}")

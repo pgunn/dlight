@@ -129,6 +129,11 @@ Based off soul sand, with the faces removed and replaced by flatter, cracked are
 
 Based on the standard texture very strongly for the blue portions (but higher res and more curve-y), less so for the orange sections which take somewhat different shapes and in some places have orange overtones. Hard to describe further because of the complexity of the design. Maintains the diagonal symmetry of the original.
 
+## Gray Glazed Terracotta
+![Green Glazed Terracotta](dlight/textures/blocks/glazed_terracotta_green.png?raw=true)
+
+Based on the broad shapes from the original, but with a lot of embellishments and differences.
+
 ## Green Glazed Terracotta
 ![Green Glazed Terracotta](dlight/textures/blocks/glazed_terracotta_green.png?raw=true)
 
