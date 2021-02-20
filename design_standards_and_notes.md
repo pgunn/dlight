@@ -1,3 +1,9 @@
+# Dirt and dirt-based textures
+## Dirt
+[!Dirt](dlight/textures/blocks/dirt.png?raw=true)
+
+Should give a feel of a lot of different stuff, slowly blending, and roughly grouped into clumps. Varying shades of browns, oranges, pale yellows, and the like. I applied a filter after finishing the texture that helped make it gritty, and saved a prefiltered version to a "junk drawer" directory in the git repo.
+
 # Stone and stone-based ores
 ## Stone
 ![Stone](dlight/textures/blocks/stone.png?raw=true)
