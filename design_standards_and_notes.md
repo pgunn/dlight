@@ -179,6 +179,12 @@ Variant of netherrack with pale purple protrusions of mostly rounded shapes plac
 
 
 # Misc
+## Ancient Debris
+![Ancient Debris Top](dlight/textures/blocks/ancient_debris_top.png?raw=true)
+![Ancient Debris Side](dlight/textures/blocks/ancient_debris_side.png?raw=true)
+
+Ancient debris is a dark brown block with a corroded circuit board motif. The top texture has a broken set of rings representing this, in progressively darker and more broken patterns as we move outwards. It ends at a certain distance, replaced by also heavily broken connective wiring. The side texture has the same brown, but with a side view of the outer connective wiring motif, and also with some general dirt-style clumping. Both blocks are slightly luminous and slightly metallic in their wires.
+
 ## Bedrock
 ![Bedrock](dlight/textures/blocks/bedrock.png?raw=true)
 
