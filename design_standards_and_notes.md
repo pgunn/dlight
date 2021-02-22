@@ -86,6 +86,12 @@ Entirely greyscale, resembling a zoomed-out nebula. Like a duststorm of light-gr
 
 Dark grey mostly round stone at various orientations. Mostly small variations in stone shades. All the stones are embedded in a mud that ranges from green to brown. The stones are dense enough that the gaps are reasonably small.
 
+# End stone based textures
+## End Stone
+![End Stone](dlight/textures/blocks/end_stone.png?raw=true)
+
+Trying to keep the "swiss cheese" look, but with purple cracks and overtones hinting that perhaps purpur can be made from end stone through some process. Very rough, entirely non-emissive and non-metallic.
+
 # Obsidian and Crying Obsidian
 ## Obsidian
 ![Obsidian](dlight/textures/blocks/obsidian.png?raw=true)
