@@ -56,6 +56,12 @@ Varying shades of dark grey. Like a foggy night with luna and some stars visible
 
 Based on andesite, but with a slightly reduced range of shades, and with a border composed of 3 shades of light grey in straight lines.
 
+## Blackstone
+![Blackstone](dlight/textures/blocks/blackstone.png?raw=true)
+![Blackstone Top](dlight/textures/blocks/blackstone_top.png?raw=true)
+
+Blackstone is an attractive nether stone. I've interpreted it as very dark shades of purple with lighter tones here and there, in large unpredictable stone shapes. It emits no light, is not reflective, and is fairly rough. It has 2 distinct textures, one for the top and one for the other faces. Like the original texture, I've made the side texture with larger chunks than the top (the side is actually a touched up version of one quadrant of the top). 
+
 ## Diorite
 ![Diorite](dlight/textures/blocks/stone_diorite.png?raw=true)
 
