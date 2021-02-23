@@ -22,7 +22,7 @@ from typing import Dict, List, Tuple # for mypy
 
 tfold_sides = ['top', 'side', 'front', 'bottom', 'back', 'inner', 'lower', 'inside', 'outside', 'outer', 'horizontal', 'vertical']
 tfold_states = ['off', 'on', 'stage', '0', '1', '2', '3', '4', '5', '6', '7', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'powered', 'connected', 'disconnected', 'opaque', 'closed', 'open', 'dry', 'wet', 'still', 'flow', 'ready']
-tfold_colours = ['black', 'blue', 'brown', 'cyan', 'gray', 'green', 'light', 'blue', 'lime', 'magenta', 'orange', 'pink', 'purple', 'red', 'silver', 'white', 'yellow', 'stained', 'grey']
+tfold_colours = ['black', 'blue', 'brown', 'cracked', 'cyan', 'gilded', 'gray', 'green', 'light', 'blue', 'lime', 'magenta', 'orange', 'pink', 'polished', 'purple', 'red', 'silver', 'white', 'yellow', 'stained', 'grey']
 tfold_misc = ['carried']
 
 def main():
