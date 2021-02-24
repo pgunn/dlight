@@ -48,28 +48,30 @@ def main():
 
 	report = defaultdict(list)
 	todo = set(texture_ref) - set(texture_list)
-	print(f"Parsing: {len(todo)} entries")
+	if not cfg.summary:
+		print(f"Parsing: {len(todo)} entries")
 
-	for missing in todo:
-		miss = missing.split('/')[-1]
-		#print(f"Parse {miss}")
-		if '_' not in miss:
-			report[miss] = [miss]
-			continue
-		miss_l = miss.split('_')
-		parent = '_'.join(filter(lambda x: x not in reducers, miss_l))
-		if parent == '': # Every single element is in tfold
-			raise Exception(f"Uh oh: {miss} ({missing})")
-		report[parent].append(miss)
-	if cfg.verbose:
-		pprint.pprint(dict(report))
-	else:
-		print("\n\t".join(sorted(report.keys())))
+		for missing in todo:
+			miss = missing.split('/')[-1]
+			#print(f"Parse {miss}")
+			if '_' not in miss:
+				report[miss] = [miss]
+				continue
+			miss_l = miss.split('_')
+			parent = '_'.join(filter(lambda x: x not in reducers, miss_l))
+			if parent == '': # Every single element is in tfold
+				raise Exception(f"Uh oh: {miss} ({missing})")
+			report[parent].append(miss)
+		if cfg.verbose:
+			pprint.pprint(dict(report))
+		else:
+			print("\n".join(map(lambda x: f"\t{x}", sorted(report.keys()))))
 
 def handle_args():
 	parser = argparse.ArgumentParser(description="Check Block Textures")
 	parser.add_argument("projdir",	help="Project Dir")
 	parser.add_argument("--reference_list",	default="nvidia_pbr_example/textures/textures_list.json", help="Reference textures_list.json")
+	parser.add_argument("--summary",	action="store_true", help="Only summarise")
 	parser.add_argument("--verbose",	action="store_true", help="Be noisier")
 	ret = parser.parse_args()
 	return ret
