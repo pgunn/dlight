@@ -194,6 +194,11 @@ Variant of netherrack with protrusions of diamond shapes containing gold (yellow
 
 Variant of netherrack with pale purple protrusions of mostly rounded shapes placed reasonably randomly in the block. These glow and look largely all right. Might have been better off making them white rather than pale purple; may yet make that revision.
 
+# Trees
+## Birch
+![Birch Log](dlight/textures/blocks/log_birch.png?raw=true)
+
+Ranges in colour from a light grey to pale yellow. Darker stripes going across, with some knots.
 
 # Misc
 ## Ancient Debris
