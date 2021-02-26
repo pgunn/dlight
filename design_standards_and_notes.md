@@ -200,6 +200,18 @@ Variant of netherrack with pale purple protrusions of mostly rounded shapes plac
 
 Ranges in colour from a light grey to pale yellow. Darker stripes going across, with some knots.
 
+# Lava
+## Still lava
+![Still lava](dlight/textures/blocks/lava_still.png?raw=true)
+
+For this, I used GIMP's lava script-fu generator, removing the border that tool makes and then applying some simple animation filters on it to generate variants. I cut'n'paste them back together into the expected format. A fair bit of work, but more process than art.
+
+# Ice
+## Regular ice
+![Ice](dlight/textures/blocks/ice.png?raw=true)
+
+I took inspiration from the default ice texture, and did diagonal streaks of various light blue shades. I went with the same transparency scheme, more-or-less, as nVidia's ice texture but appropriate to our texture.
+
 # Misc
 ## Ancient Debris
 ![Ancient Debris Top](dlight/textures/blocks/ancient_debris_top.png?raw=true)
