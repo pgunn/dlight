@@ -218,6 +218,11 @@ For this, I again used GIMP's lava script-fu generator, with a different setting
 
 I took inspiration from the default ice texture, and did diagonal streaks of various light blue shades. I went with the same transparency scheme, more-or-less, as nVidia's ice texture but appropriate to our texture.
 
+## Packed ice
+![Packed Ice](dlight/textures/blocks/ice_packed.png?raw=true)
+
+Based on ice, but with no transparency, and with higher-intensity blue highlights added. Using the same simple MER that nvidia uses.
+
 # Misc
 ## Ancient Debris
 ![Ancient Debris Top](dlight/textures/blocks/ancient_debris_top.png?raw=true)
