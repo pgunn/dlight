@@ -1,0 +1,58 @@
+#!/usr/bin/env python
+
+import argparse
+import code # for code.interact(local=dict(globals(), **locals()) ) debugging
+import os
+import PIL # Pillow please
+import PIL.Image
+import numpy as np
+from typing import Dict, List, Tuple # for mypy
+
+######################
+# make_shift_set
+#
+# This takes a single image that already tiles properly, and makes a
+# version of it that's a "shift set".
+#
+# A shift set is composed of:
+#	many images of the same dimensions as the original, tiled vertically
+#	where each individual image after the first is "rotated" vertically
+#		in the vertical dimension
+#
+# The intended effect of this is for textures like Minecraft's "flowing lava"
+# to look right.
+
+def main():
+	cfg = handle_args()
+	if not os.path.isfile(cfg.source_image):
+		raise Exception(f"Could not find {cfg.source_image}")
+	if os.path.isfile(cfg.target_image):
+		raise Exception(f"Target image {cfg.target_image} already exists and I will not overwrite it")
+	data = np.asarray(PIL.Image.open(cfg.source_image, 'r'))
+	original_shape = data.shape
+	newdata = np.zeros(shape=(original_shape[0]*cfg.y_size, original_shape[1], original_shape[2]), dtype=data.dtype)
+
+	all_data = []
+	for n in range(0, cfg.y_size):
+		print(f"Calculating for iteration {n}")
+		rotation_amount = n * int(original_shape[0] / cfg.y_size)
+		print(f"\tUsing shift of {rotation_amount}..")
+		rolled_data = np.roll(data, rotation_amount, 0)
+		newdata[original_shape[0]*n:original_shape[0]*(n+1), :, :] = rolled_data
+
+	# Do stuff
+	im = PIL.Image.fromarray(newdata)
+	# Write image
+	im.save(cfg.target_image)
+
+def handle_args():
+	parser = argparse.ArgumentParser(description="This does a thing")
+	parser.add_argument("source_image",		help="Image to draw from")
+	parser.add_argument("target_image",		help="Image to write")
+	parser.add_argument("y_size",	type=int,	help="How many images to make")
+	parser.add_argument("--verbose",	action="store_true", help="Be noisier")
+	ret = parser.parse_args()
+	return ret
+
+#####
+main()
