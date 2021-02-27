@@ -206,6 +206,12 @@ Ranges in colour from a light grey to pale yellow. Darker stripes going across, 
 
 For this, I used GIMP's lava script-fu generator, removing the border that tool makes and then applying some simple animation filters on it to generate variants. I cut'n'paste them back together into the expected format. A fair bit of work, but more process than art.
 
+## Flowing lava
+
+![Still lava](junk_drawer/lava10_base.png?raw=true)
+
+For this, I again used GIMP's lava script-fu generator, with a different setting, removed the border, applied a "seamless tile" filter (probably better than what I used for still lava), and saved it to a base texture that is displayed above. I then used a script I wrote called makeshiftset to generate rotated versions of that to perform the appropriate shifts to make the texture seem to flow. This is still pretty experimental, but it hopefully will do the job.
+
 # Ice
 ## Regular ice
 ![Ice](dlight/textures/blocks/ice.png?raw=true)
