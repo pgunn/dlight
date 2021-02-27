@@ -32,7 +32,6 @@ def main():
 	original_shape = data.shape
 	newdata = np.zeros(shape=(original_shape[0]*cfg.y_size, original_shape[1], original_shape[2]), dtype=data.dtype)
 
-	all_data = []
 	for n in range(0, cfg.y_size):
 		print(f"Calculating for iteration {n}")
 		rotation_amount = n * int(original_shape[0] / cfg.y_size)
