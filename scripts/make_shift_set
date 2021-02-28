@@ -45,7 +45,7 @@ def main():
 	im.save(cfg.target_image)
 
 def handle_args():
-	parser = argparse.ArgumentParser(description="This does a thing")
+	parser = argparse.ArgumentParser(description="Make flowing textures from a template")
 	parser.add_argument("source_image",		help="Image to draw from")
 	parser.add_argument("target_image",		help="Image to write")
 	parser.add_argument("y_size",	type=int,	help="How many images to make")

@@ -4,6 +4,12 @@
 
 Should give a feel of a lot of different stuff, slowly blending, and roughly grouped into clumps. Varying shades of browns, oranges, pale yellows, and the like. I applied a filter after finishing the texture that helped make it gritty, and saved a prefiltered version to a "junk drawer" directory in the git repo.
 
+## Dirt
+[!Mycelium Side](dlight/textures/blocks/mycelium_side.png?raw=true)
+[!Mycelium Top](dlight/textures/blocks/mycelium_top.png?raw=true)
+
+From the side, based on dirt with a "blueberry joghurt" topping, composed of many shades of blue/purples, speckly in places. We add some speckles in the dirt layer too, to resemble the roots digging into the soil. The top texture is made from scratch with the same colours and design motifs, largely.
+
 # Stone and stone-based ores
 ## Stone
 ![Stone](dlight/textures/blocks/stone.png?raw=true)

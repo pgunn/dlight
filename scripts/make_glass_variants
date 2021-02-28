@@ -1,0 +1,85 @@
+#!/usr/bin/env python
+
+import argparse
+import code # for code.interact(local=dict(globals(), **locals()) ) debugging
+import os
+import PIL # Pillow please
+import PIL.Image
+import numpy as np
+from typing import Dict, List, Tuple # for mypy
+
+######################
+# make_glass_variants
+#
+# This looks at the project dir for a texture pack and uses the glass
+# texture to produce all the coloured glass variants Minecraft needs.
+#
+# TODO: Have this handle glass panes too
+# TODO: Have this handle _texture_set.json (which should probably have the same content between coloured glasses)
+# TODO: Have this handle _mer (which maybe should be shared between coloured glasses)
+
+# This data structure needs two colours, a darker and lighter
+# value to fill into the cube
+#
+# Note that the original glass texture has:
+# A black ring (0,0,0,255) around the whole image
+# An off-white ring (241, 241, 241, 255) inside that
+# A grey ring (105, 105, 105, 255) inside that
+# Inside that is mostly fully transparent data (255, 255, 255, 0)
+# With some cyan stylised corners (131, 156, 186, 255)
+# The index ordering is down then right. e.g. data[5, 11] = (131, 156, 186, 255) rather than transparent.
+#	This is opposite of GIMP's coordinate ordering.
+#
+# For replacement glass textures, we want to leave the outer ring in place, and
+# * Replace the inner (transparent) body with a pale, mostly transparent version of the colour. Perhaps
+#	(something, something, something, 20)
+# * Replace the stylised corners with a more solid and impressive version of that colour
+# It'd be tempting to have the two differ only by transparency, but that would not give an impressive visual
+# effect, so let's not do that.
+
+colours_to_data = {
+		'black': 	0,
+		'blue': 	0,
+		'brown':	0,
+		'cyan': 	0,
+		'gray': 	0,
+		'green': 	0,
+		'light_blue': 	0,
+		'light_gray': 	0,
+		'lime': 	0,
+		'magenta': 	0,
+		'orange': 	0,
+		'pink': 	0,
+		'purple': 	0,
+		'red': 		0,
+		'silver': 	0,
+		'white': 	0,
+		'yellow': 	0,
+		}
+
+def main():
+	cfg = handle_args()
+	original_texture = os.path.join(cfg.projdir, 'textures', 'blocks', 'glass.tga')
+	if not os.path.isfile(original_texture):
+		raise Exception(f"Could not find original glass texture {original_texture}")
+	else:
+		print(f"Parsing original glass texture at {original_texture}")
+
+	data = np.asarray(PIL.Image.open(original_texture, 'r'))
+	for colour in colours_to_data.keys():
+		targfn = os.path.join(cfg.projdir, 'textures', 'blocks', f"glass_{colour}.tga")
+		newdata = data.copy()
+		# Copy and manipulate newdata
+		# ...
+		ndpil = PIL.Image.fromarray(newdata)
+		print(f"Writing {targfn}...")
+		#ndpil.save(targfn)
+
+def handle_args():
+	parser = argparse.ArgumentParser(description="Make coloured glass texture variants")
+	parser.add_argument("projdir",	help="Project Dir")
+	ret = parser.parse_args()
+	return ret
+
+#####
+main()
