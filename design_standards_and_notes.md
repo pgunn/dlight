@@ -223,6 +223,11 @@ I took inspiration from the default ice texture, and did diagonal streaks of var
 
 Based on ice, but with no transparency, and with higher-intensity blue highlights added. Using the same simple MER that nvidia uses.
 
+## Blue ice
+![Blue Ice](dlight/textures/blocks/blue_ice.png?raw=true)
+
+Based on packed ice, but with most patterns softened by brushes of an intense blue. To make things interesting, added diagonal stripes of an even deeper blue in small lines.
+
 # Misc
 ## Ancient Debris
 ![Ancient Debris Top](dlight/textures/blocks/ancient_debris_top.png?raw=true)
