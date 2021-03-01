@@ -4,7 +4,7 @@
 
 Should give a feel of a lot of different stuff, slowly blending, and roughly grouped into clumps. Varying shades of browns, oranges, pale yellows, and the like. I applied a filter after finishing the texture that helped make it gritty, and saved a prefiltered version to a "junk drawer" directory in the git repo.
 
-## Dirt
+## Mycelium
 ![Mycelium Side](dlight/textures/blocks/mycelium_side.png?raw=true)
 ![Mycelium Top](dlight/textures/blocks/mycelium_top.png?raw=true)
 
