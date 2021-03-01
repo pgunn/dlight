@@ -18,9 +18,9 @@ Remember that a .mcpack file, which minecraft will install when you double click
 For the foreseeable future you will likely want to mix this texture pack with one or more other texture packs; it will be a long time before I have coverage of all textures, if that ever even happens. You might instead just use this to understand how texture packs work and what kinds of scripting you might do around them. I use nVidia's sample pack.
 
 ## See also:
-* [README](README.md)
 * [Showcase: Stone](showcase_stone.md)
 * [Showcase: Non-Stone](showcase_nonstone.md)
+* [Technical Notes](NOTES.md)
 
 ## On Java
 I have never had an install of Minecraft Java so I have no idea if this will work on that platform.
