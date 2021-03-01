@@ -10,6 +10,10 @@ Should give a feel of a lot of different stuff, slowly blending, and roughly gro
 
 From the side, based on dirt with a "blueberry joghurt" topping, composed of many shades of blue/purples, speckly in places. We add some speckles in the dirt layer too, to resemble the roots digging into the soil. The top texture is made from scratch with the same colours and design motifs, largely.
 
+## Grass
+![Grass Side](dlight/textures/blocks/grass_side.png?raw=true)
+
+Side texture for grass. Didn't do top texture yet. Based on dirt, and following the (annoyingly complex) example of how to manage the alpha channel from nvidia.
 
 # Glasses
 ## Plain Glass (full pane)
