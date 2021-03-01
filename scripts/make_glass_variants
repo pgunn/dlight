@@ -38,46 +38,81 @@ from typing import Dict, List, Tuple # for mypy
 # effect, so let's not do that.
 
 colours_to_data = {
-		'black': 	0,
-		'blue': 	0,
-		'brown':	0,
-		'cyan': 	0,
-		'gray': 	0,
-		'green': 	0,
-		'light_blue': 	0,
-		'light_gray': 	0,
-		'lime': 	0,
-		'magenta': 	0,
-		'orange': 	0,
-		'pink': 	0,
-		'purple': 	0,
-		'red': 		0,
-		'silver': 	0,
-		'white': 	0,
-		'yellow': 	0,
+		'black': 	{'bg': [80, 80, 80],	'fg': [20, 20, 20],	'render': True},
+		'blue': 	{'bg': [106, 108, 255],	'fg': [36, 38, 147],	'render': True},
+		'brown':	{'bg': [235, 181, 137],	'fg': [157, 81, 20],	'render': True},
+		'cyan': 	{'bg': [138, 228, 242],	'fg': [19, 140, 158],	'render': True},
+		'gray': 	{'bg': [201, 201, 201],	'fg': [120, 120, 120],	'render': True},
+		'green': 	{'bg': [110, 226, 140],	'fg': [15, 130, 45],	'render': True},
+		'light_blue': 	{'bg': [180, 250, 250], 'fg': [118, 171, 171],	'render': True},
+		'lime': 	{'bg': [120, 244, 150], 'fg': [52, 119, 68],	'render': True},
+		'magenta': 	{'bg': [255, 155, 255], 'fg': [150, 60, 150],	'render': True},
+		'orange': 	{'bg': [205, 168, 100], 'fg': [177, 114, 0],	'render': True},
+		'pink': 	{'bg': [210, 158, 166], 'fg': [160, 85, 98],	'render': True},
+		'purple': 	{'bg': [234, 75, 234],	'fg': [142, 32, 142],	'render': True},
+		'red': 		{'bg': [243, 94, 124],	'fg': [145, 17, 42],	'render': True},
+		'silver': 	{'bg': [223, 223, 223], 'fg': [158, 158, 158],	'render': True}, # light gray
+		'white': 	{'bg': [240, 240, 240], 'fg': [170, 170, 170],	'render': True},
+		'yellow': 	{'bg': [241, 241, 134], 'fg': [136, 136, 44],	'render': True},
 		}
 
 def main():
 	cfg = handle_args()
-	original_texture = os.path.join(cfg.projdir, 'textures', 'blocks', 'glass.tga')
+	original_texture	= os.path.join(cfg.projdir, 'textures', 'blocks', 'glass.tga')
+	original_ts		= os.path.join(cfg.projdir, 'textures', 'blocks', 'glass.texture_set.json')
 	if not os.path.isfile(original_texture):
 		raise Exception(f"Could not find original glass texture {original_texture}")
 	else:
 		print(f"Parsing original glass texture at {original_texture}")
+	if not os.path.isfile(original_ts):
+		raise Exception(f"Could not find original texture_set.json {original_ts}")
+	else:
+		print(f"Parsing original texture set json at {original_ts}")
 
 	data = np.asarray(PIL.Image.open(original_texture, 'r'))
-	for colour in colours_to_data.keys():
+	with open(original_ts, 'r') as orig_tsh:
+		original_tsdata = orig_tsh.read()
+
+	for colour in sorted(colours_to_data.keys()):
+		print(f"Colour: {colour}")
+		if not colours_to_data[colour]['render']:
+			print("\tSkipping due to policy")
+			continue
+		colour_bg = np.array([	colours_to_data[colour]['bg'][0],
+					colours_to_data[colour]['bg'][1],
+					colours_to_data[colour]['bg'][2],
+					cfg.opacity_main], dtype=int)
+		colour_fg = np.array([	colours_to_data[colour]['fg'][0],
+					colours_to_data[colour]['fg'][1],
+					colours_to_data[colour]['fg'][2],
+					cfg.opacity_style], dtype=int)
+
 		targfn = os.path.join(cfg.projdir, 'textures', 'blocks', f"glass_{colour}.tga")
+		targjs = os.path.join(cfg.projdir, 'textures', 'blocks', f"glass_{colour}.texture_set.json")
 		newdata = data.copy()
-		# Copy and manipulate newdata
-		# ...
+		# now we transform newdata
+		nd_red, nd_green, nd_blue, nd_alpha = newdata.T
+		bg_areas = (nd_red == 255) & (nd_green == 255) & (nd_blue == 255) & (nd_alpha == 0)
+		fg_areas = (nd_red == 131) & (nd_green == 156) & (nd_blue == 186) & (nd_alpha == 255)
+
+		newdata[bg_areas.T] = colour_bg
+		newdata[fg_areas.T] = colour_fg
+
 		ndpil = PIL.Image.fromarray(newdata)
-		print(f"Writing {targfn}...")
-		#ndpil.save(targfn)
+		print(f"\tWriting {targfn}...")
+		ndpil.save(targfn)
+
+		new_ts = original_tsdata.replace('"glass"', f'"glass_{colour}"')
+		new_ts = new_ts.replace('glass_mer', 'glass_shared_tinted_mer')
+		with open(targjs, 'w') as targjsh:
+			targjsh.write(new_ts)
+	print("Done")
 
 def handle_args():
 	parser = argparse.ArgumentParser(description="Make coloured glass texture variants")
 	parser.add_argument("projdir",	help="Project Dir")
+	parser.add_argument("--opacity_main",	type=int, default=20,	help="For main body of block, 0-255 for how opaque")
+	parser.add_argument("--opacity_style",	type=int, default=200,	help="For style parts of block, 0-255 for how opaque")
 	ret = parser.parse_args()
 	return ret
 

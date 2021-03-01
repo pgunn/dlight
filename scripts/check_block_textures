@@ -9,6 +9,8 @@ import PIL.Image
 import re
 from typing import Dict, List, Tuple # for mypy
 
+animated_blocks = ['lava_flow', 'lava_still']
+
 ######################
 # check_block_textures
 #
@@ -50,8 +52,9 @@ def main():
 				raise Exception(f'MER Texturefile {texture} is not in RGB format')
 		elif th.mode != 'RGBA':
 			raise Exception(f'Non-MER Texturefile {texture} is not in RGBA format')
-		if th.size[0] != th.size[1]:
-			raise Exception(f'Texturefile {texture} does not have equal dimensions')
+		if len(list(filter(lambda x: x in texture, animated_blocks))) == 0:
+			if th.size[0] != th.size[1]:
+				raise Exception(f'Texturefile {texture} does not have equal dimensions')
 		if th.size[0] > 128:
 			print(f"Warning: dimensionality of {th.size} for {texture} is large and may cause issues")
 	# Check 3 (for the future): verify the PBR features for the textures, if the texture pack
@@ -85,7 +88,7 @@ def gather_texture_list(scandir:str) -> List[str]:
 	# nobody doing that.
 	
 	ret =       glob.glob(os.path.join(scandir, '*.png'))
-	ret.append(*glob.glob(os.path.join(scandir, '*.tga')))
+	ret.extend(glob.glob(os.path.join(scandir, '*.tga')))
 	ret = filter(lambda x: '_mer.'       not in x, ret)
 	ret = filter(lambda x: '_normal.'    not in x, ret)
 	ret = filter(lambda x: '_heightmap.' not in x, ret)
