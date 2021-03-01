@@ -13,15 +13,19 @@ from typing import Dict, List, Tuple # for mypy
 #
 # This looks at the project dir for a texture pack and uses the glass
 # texture to produce all the coloured glass variants Minecraft needs.
+# It also creates the .texture_set.json files
 #
 # TODO: Have this handle glass panes too
-# TODO: Have this handle _texture_set.json (which should probably have the same content between coloured glasses)
-# TODO: Have this handle _mer (which maybe should be shared between coloured glasses)
 
 # This data structure needs two colours, a darker and lighter
 # value to fill into the cube
 #
-# Note that the original glass texture has:
+#
+# This depends:
+#	on two specific pixel values of my original glass texture (defined below)
+#	on there existing a glass_shared_tinted_mer.png which will be used for all these
+#
+# The original glass texture has:
 # A black ring (0,0,0,255) around the whole image
 # An off-white ring (241, 241, 241, 255) inside that
 # A grey ring (105, 105, 105, 255) inside that
