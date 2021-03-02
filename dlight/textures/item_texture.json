@@ -1,0 +1,11 @@
+{
+    "resource_pack_name": "dlight",
+    "texture_data": {
+                    "sword": {
+                             "textures": {
+                                         "textures/items/diamond_sword",
+                                         "textures/items/netherite_sword"
+                                         }
+                             }
+                    }
+}
