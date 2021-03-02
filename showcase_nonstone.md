@@ -12,8 +12,9 @@ From the side, based on dirt with a "blueberry joghurt" topping, composed of man
 
 ## Grass
 ![Grass Side](dlight/textures/blocks/grass_side.png?raw=true)
+![Grass Top](dlight/textures/blocks/grass_top.png?raw=true)
 
-Side texture for grass. Didn't do top texture yet. Based on dirt, and following the (annoyingly complex) example of how to manage the alpha channel from nvidia.
+Side texture is based on dirt, and following the (annoyingly complex) example of how to manage the alpha channel from nvidia. Top texture is greyscale hand-drawn lines with two attractors.
 
 # Glasses
 ## Plain Glass (full pane)
