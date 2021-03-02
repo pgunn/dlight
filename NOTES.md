@@ -23,3 +23,7 @@ I am operating under the theory that the lava flow texture is a cleverly shifted
 
 ## Glass
 Colored glass is generated from my standard glass texture by my make\_glass\_variants script. It depends on specifics of that original image, and would need adjustments to work with other images (depending on how different they are, possibly an entirely different approach would be necessary).
+
+## Swords
+My initial experimentations with making sword textures (which are not block textures) show me that the item-bar representation is the same image as what's swung in the hand. When in the hand, the upper-left corner is treated as "forward" and the object is given some artificial thickness. An extra JSON file is used to note item textures (unclear if this is mandatory or just to speed imports). The stock texture pack uses indexed colour rather than the standard RGBA colour space; I'm guessing that images that don't do that can't get effects like enchanted swords, but they clearly work. Sharp rather than soft edges around image content is probably desirable.
+
