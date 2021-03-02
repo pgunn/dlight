@@ -20,6 +20,7 @@ For the foreseeable future you will likely want to mix this texture pack with on
 ## See also:
 * [Showcase: Stone](showcase_stone.md)
 * [Showcase: Non-Stone](showcase_nonstone.md)
+* [Showcase: Items](showcase_item.md)
 * [Technical Notes](NOTES.md)
 
 ## On Java
