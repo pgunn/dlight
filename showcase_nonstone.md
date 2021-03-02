@@ -11,10 +11,9 @@ Should give a feel of a lot of different stuff, slowly blending, and roughly gro
 From the side, based on dirt with a "blueberry joghurt" topping, composed of many shades of blue/purples, speckly in places. We add some speckles in the dirt layer too, to resemble the roots digging into the soil. The top texture is made from scratch with the same colours and design motifs, largely.
 
 ## Grass
-![Grass Side](dlight/textures/blocks/grass_side.png?raw=true)
 ![Grass Top](dlight/textures/blocks/grass_top.png?raw=true)
 
-Side texture is based on dirt, and following the (annoyingly complex) example of how to manage the alpha channel from nvidia. Top texture is greyscale hand-drawn lines with two attractors.
+Side texture is based on dirt, and following the (annoyingly complex) example of how to manage the alpha channel from nvidia. Top texture is greyscale hand-drawn lines with two attractors. The side texture is all TGA, so there's no way for it to be rendered in this preview. The top texture won't look right without the biome-specific colour Minecraft adds to grass textures.
 
 # Glasses
 ## Plain Glass (full pane)
