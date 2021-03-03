@@ -1,6 +1,8 @@
 [
   "textures/blocks/ancient_debris_side",
   "textures/blocks/ancient_debris_top",
+  "textures/blocks/basalt_side",
+  "textures/blocks/basalt_top",
   "textures/blocks/bedrock",
   "textures/blocks/blackstone",
   "textures/blocks/blackstone_top",
