@@ -57,6 +57,7 @@
   "textures/blocks/obsidian",
   "textures/blocks/quartz_ore",
   "textures/blocks/rail_golden",
+  "textures/blocks/rail_golden_powered",
   "textures/blocks/rail_normal",
   "textures/blocks/red_sand",
   "textures/blocks/redstone_ore",
