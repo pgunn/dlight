@@ -56,6 +56,8 @@
   "textures/blocks/netherrack",
   "textures/blocks/obsidian",
   "textures/blocks/quartz_ore",
+  "textures/blocks/rail_detector",
+  "textures/blocks/rail_detector_powered",
   "textures/blocks/rail_golden",
   "textures/blocks/rail_golden_powered",
   "textures/blocks/rail_normal",
