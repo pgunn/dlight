@@ -80,5 +80,20 @@
   "textures/blocks/torch_on",
   "textures/blocks/vine",
   "textures/blocks/web",
-  "textures/blocks/wool_colored_gray"
+  "textures/blocks/wool_colored_black",
+  "textures/blocks/wool_colored_blue",
+  "textures/blocks/wool_colored_brown",
+  "textures/blocks/wool_colored_cyan",
+  "textures/blocks/wool_colored_gray",
+  "textures/blocks/wool_colored_green",
+  "textures/blocks/wool_colored_light_blue",
+  "textures/blocks/wool_colored_lime",
+  "textures/blocks/wool_colored_magenta",
+  "textures/blocks/wool_colored_orange",
+  "textures/blocks/wool_colored_pink",
+  "textures/blocks/wool_colored_purple",
+  "textures/blocks/wool_colored_red",
+  "textures/blocks/wool_colored_silver",
+  "textures/blocks/wool_colored_white",
+  "textures/blocks/wool_colored_yellow"
 ]

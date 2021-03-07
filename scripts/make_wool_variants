@@ -1,0 +1,114 @@
+#!/usr/bin/env python
+
+import argparse
+import code # for code.interact(local=dict(globals(), **locals()) ) debugging
+import os
+import PIL # Pillow please
+import PIL.Image
+import numpy as np
+from typing import Dict, List, Tuple # for mypy
+
+######################
+# make_wool_variants
+#
+# This looks at the project dir for a texture pack and uses the grey wool
+# texture to produce all the coloured wool variants Minecraft needs.
+# It also creates the .texture_set.json files
+#
+# This depends:
+#	on the grey wool texture
+#	on there existing a wool_colored_shared_mer.png which will be used for all these
+#
+# Unlike the glass script, this lacks the benefit of having a source block with
+# just a few colours to tweak, so we're going to need to figure out the relative brightness for
+# each pixel and move it into the right hue and brightness space.
+
+
+# NOTE: We have removed wool_colored_gray from this, because it is the source
+# NOTE: We are using the American spelling of coloured here because minecraft expects it in filenames
+
+colours_to_data = {
+		'black': 	{'avg_hue': [80, 80, 80],	'render': True},
+		'blue': 	{'avg_hue': [106, 108, 255],	'render': True},
+		'brown':	{'avg_hue': [235, 181, 137],	'render': True},
+		'cyan': 	{'avg_hue': [138, 228, 242],	'render': True},
+		'green': 	{'avg_hue': [110, 226, 140],	'render': True},
+		'light_blue': 	{'avg_hue': [180, 250, 250],	'render': True},
+		'lime': 	{'avg_hue': [1150, 244, 150],	'render': True},
+		'magenta': 	{'avg_hue': [255, 155, 255],	'render': True},
+		'orange': 	{'avg_hue': [1505, 168, 100],	'render': True},
+		'pink': 	{'avg_hue': [210, 158, 166],	'render': True},
+		'purple': 	{'avg_hue': [234, 75, 234],	'render': True},
+		'red': 		{'avg_hue': [243, 94, 124],	'render': True},
+		'silver': 	{'avg_hue': [223, 223, 223],	'render': True}, # light gray
+		'white': 	{'avg_hue': [240, 240, 240],	'render': True},
+		'yellow': 	{'avg_hue': [241, 241, 134],	'render': True},
+		}
+
+def main():
+	cfg = handle_args()
+	original_texture	= os.path.join(cfg.projdir, 'textures', 'blocks', 'wool_colored_gray.png')
+	original_ts		= os.path.join(cfg.projdir, 'textures', 'blocks', 'wool_colored_gray.texture_set.json')
+	if not os.path.isfile(original_texture):
+		raise Exception(f"Could not find original glass texture {original_texture}")
+	else:
+		print(f"Parsing original glass texture at {original_texture}")
+	if not os.path.isfile(original_ts):
+		raise Exception(f"Could not find original texture_set.json {original_ts}")
+	else:
+		print(f"Parsing original texture set json at {original_ts}")
+
+	data = np.asarray(PIL.Image.open(original_texture, 'r').convert("RGB")) # Right now this is ~183
+	data_brightness_mean = data.mean() # Try not to think about this too much. It's correct (I think) but ugly.
+	with open(original_ts, 'r') as orig_tsh:
+		original_tsdata = orig_tsh.read()
+
+	data_ratio = np.zeros(shape=(data.shape[0], data.shape[1]), dtype=np.float) # Precompute this for later use
+	data_ratio = ((data - data_brightness_mean) / data_brightness_mean)[:,:,0]
+
+	for colour in sorted(colours_to_data.keys()):
+		print(f"Colour: {colour}")
+		if not colours_to_data[colour]['render']:
+			print("\tSkipping due to policy")
+			continue
+
+		targfn = os.path.join(cfg.projdir, 'textures', 'blocks', f"wool_colored_{colour}.png")
+		targjs = os.path.join(cfg.projdir, 'textures', 'blocks', f"wool_colored_{colour}.texture_set.json")
+		newdata = data.copy()
+
+		newdata_t = np.zeros(shape=newdata.shape, dtype='uint16')
+
+		brightness_target = np.mean(colours_to_data[colour]['avg_hue'])
+		# now we transform newdata
+		# We'll start out noting the ratio and polarity of pixelvalue / data_brightness_mean, and
+		# applying that same transformation against avg_hue to get the new pixel value.
+		# Because the first part is a property of the greyscale, we've already precomputed this into data_ratio
+		# above.
+		# This might not be the best way to do this.
+		# newdata_t is our way of doing the computation and giving us a chance to thresh it rather than
+		# have integer overflow
+
+		newdata_t[:,:,0] = (data_ratio[:,:] * brightness_target) + colours_to_data[colour]['avg_hue'][0]
+		newdata_t[:,:,1] = (data_ratio[:,:] * brightness_target) + colours_to_data[colour]['avg_hue'][1]
+		newdata_t[:,:,2] = (data_ratio[:,:] * brightness_target) + colours_to_data[colour]['avg_hue'][2]
+		newdata_t[newdata_t > 255] = 255 # thresh
+		newdata[:,:,:] = newdata_t[:,:,:]
+		ndpil = PIL.Image.fromarray(newdata)
+		print(f"\tWriting {targfn}...")
+		ndpil.save(targfn)
+
+		new_ts = original_tsdata.replace('"wool_colored_gray"', f'"wool_colored_{colour}"')
+		with open(targjs, 'w') as targjsh:
+			targjsh.write(new_ts)
+	print("Done")
+
+def handle_args():
+	parser = argparse.ArgumentParser(description="Make coloured glass texture variants")
+	parser.add_argument("projdir",	help="Project Dir")
+	parser.add_argument("--opacity_main",	type=int, default=20,	help="For main body of block, 0-255 for how opaque")
+	parser.add_argument("--opacity_style",	type=int, default=200,	help="For style parts of block, 0-255 for how opaque")
+	ret = parser.parse_args()
+	return ret
+
+#####
+main()
