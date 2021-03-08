@@ -27,3 +27,5 @@ Colored glass is generated from my standard glass texture by my make\_glass\_var
 ## Swords
 My initial experimentations with making sword textures (which are not block textures) show me that the item-bar representation is the same image as what's swung in the hand. When in the hand, the upper-left corner is treated as "forward" and the object is given some artificial thickness. An extra JSON file is used to note item textures (unclear if this is mandatory or just to speed imports). The stock texture pack uses indexed colour rather than the standard RGBA colour space; I'm guessing that images that don't do that can't get effects like enchanted swords, but they clearly work. Sharp rather than soft edges around image content is probably desirable.
 
+## Smooth stone
+Uses te stone\_slab\_top texture for all faces. Weird legacy stuff going on there.
