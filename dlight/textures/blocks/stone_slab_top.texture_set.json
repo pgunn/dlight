@@ -1,7 +1,7 @@
 {
   "format_version": "1.16.100",
   "minecraft:texture_set": {
-    "color": "smooth_stone",
-    "metalness_emissive_roughness": "smooth_stone_mer"
+    "color": "stone_slab_top",
+    "metalness_emissive_roughness": "stone_slab_top_mer"
   }
 }
