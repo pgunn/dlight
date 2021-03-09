@@ -15,6 +15,8 @@
   "textures/blocks/dirt",
   "textures/blocks/emerald_ore",
   "textures/blocks/end_stone",
+  "textures/blocks/furnace_front_off",
+  "textures/blocks/furnace_front_on",
   "textures/blocks/gilded_blackstone",
   "textures/blocks/glass",
   "textures/blocks/glass_black",
