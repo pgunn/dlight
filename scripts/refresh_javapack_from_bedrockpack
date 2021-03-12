@@ -1,0 +1,90 @@
+#!/usr/bin/env python
+
+import argparse
+import code # for code.interact(local=dict(globals(), **locals()) ) debugging
+import glob
+import json
+import os
+import re
+import shutil
+import tempfile
+from typing import Dict, List, Tuple # for mypy
+
+######################
+# programname
+#
+# What the program is for
+
+def main():
+	cfg = handle_args()
+	orig_metadata = jload(os.path.join(cfg.src, 'manifest.json'))
+
+	with tempfile.TemporaryDirectory() as td:
+		# In this context manager, we made a directory into which we'll place everything before we zip it
+		shutil.copy(src=os.path.join(cfg.src, 'pack_icon.png'), dst=(os.path.join(td, 'pack.png')))
+		with open(os.path.join(td, 'pack.mcmeta'), 'w') as mcmf:
+			data =	{
+				"pack": {
+					"pack_format": cfg.pack_ver,
+					"description": orig_metadata['header']['description']
+					}
+				}
+			json.dump(data, mcmf)
+		os.makedirs(os.path.join(td, 'assets', 'minecraft', 'textures', 'block'))
+		for btfile in os.listdir(os.path.join(cfg.src, 'textures', 'blocks')):
+			if '_mer' in btfile:
+				continue
+			if 'texture_set' in btfile:
+				continue
+			if not os.path.isfile(os.path.join(cfg.src, 'textures', 'blocks', btfile)):
+				continue # Embedded dir?
+			print(f"Processing texture {btfile}")
+			targfn = btfile
+			# TODO add more specific rules for remapping names here.
+			if btfile.startswith('lava'):
+				print(f"Warning {btfile}: animated textures are not supported. Skipping!")
+				continue # Lava textures are totally different in format FIXME Figure out how to convert?
+			#if '.tga' in btfile:
+			#	print(f"Warning {btfile}: TGA files not supported. Skipping!")
+			#	continue
+			elif 'ice_packed' in btfile:
+				targfn = re.sub('ice_packed', 'packed_ice', btfile)
+			elif btfile.startswith('wool_colored_'):
+				targfn = re.sub('wool_colored_(.*).png', '\\1_wool.png', btfile)
+			elif btfile.startswith('glazed_terracotta_'):
+				targfn = re.sub('glazed_terracotta_(.*)\.', '\\1_glazed_terracotta.', btfile)
+			elif 'rail_normal_turned' in btfile:
+				targfn = re.sub('rail_normal_turned', 'rail_corner', btfile)
+			elif btfile.startswith('rail_'):
+				targfn = re.sub('rail_(.*)\.', '\\1_rail.', btfile)
+				targfn = re.sub('_powered_rail', '_rail_on', targfn) # refine
+			elif btfile.startswith('glass_'):
+				targfn = re.sub('glass_(.*)\.', '\\1_glass.', btfile)
+			elif btfile in ['stone_andesite.png', 'stone_diorite.png', 'stone_granite.png']:
+				targfn = re.sub('stone_', '', btfile)
+			elif '_smooth.' in btfile: # polished/smooth bricks
+				targfn = re.sub('stone_(.*)_smooth', 'polished_\\1', btfile)
+			elif 'grass_' in btfile:
+				targfn = re.sub('grass_', 'grass_block_', btfile)
+			# We may also bail for textures that are too different in format (e.g. lava flow), or figure out how to convert them
+			shutil.copy(src=os.path.join(cfg.src, 'textures', 'blocks', btfile), dst=os.path.join(td, 'assets', 'minecraft', 'textures', 'block', targfn))
+		shutil.make_archive(f"{orig_metadata['header']['name']}-{orig_metadata['header']['version'][0]}.{orig_metadata['header']['version'][1]}.{orig_metadata['header']['version'][2]}", 'zip', td)
+
+
+def handle_args():
+	parser = argparse.ArgumentParser(description="This does a thing")
+	parser.add_argument("--src",	default='dlight', type=str,	help="source dir for bedrock pack")
+	parser.add_argument("--pack_ver",	default=6, type=int,	help="Pack version")
+	ret = parser.parse_args()
+	return ret
+
+#####
+
+def jload(fn:str):
+	with open(fn, 'r') as fh:
+		ret = json.load(fh)
+	return ret
+
+
+#####
+main()
