@@ -110,6 +110,8 @@ def main():
 				targfn = re.sub('stone_', '', btfile)
 			elif btfile.startswith('slime.'):
 				targfn = re.sub('slime\.', 'slime_block.', btfile)
+			elif btfile.startswith('portal.'):
+				targfn = re.sub('portal\.', 'nether_portal.', btfile)
 			elif btfile.startswith('torch_on.'):
 				targfn = re.sub('torch_on\.', 'torch.', btfile)
 			elif btfile.startswith('web.'):
