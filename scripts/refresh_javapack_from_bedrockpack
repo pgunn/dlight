@@ -76,6 +76,7 @@ def main():
 				}
 			json.dump(data, mcmf)
 		os.makedirs(os.path.join(td, 'assets', 'minecraft', 'textures', 'block'))
+		os.makedirs(os.path.join(td, 'assets', 'minecraft', 'textures', 'item'))
 		for btfile in os.listdir(os.path.join(cfg.src, 'textures', 'blocks')):
 			if '_mer' in btfile:
 				continue
@@ -83,16 +84,10 @@ def main():
 				continue
 			if not os.path.isfile(os.path.join(cfg.src, 'textures', 'blocks', btfile)):
 				continue # Embedded dir?
-			print(f"Processing texture {btfile}")
+			print(f"Processing block texture {btfile}")
 			targfn = btfile
-			# TODO add more specific rules for remapping names here.
-			if btfile.startswith('lava'):
-				print(f"Warning {btfile}: animated textures are not supported. Skipping!")
-				continue # Lava textures are totally different in format FIXME Figure out how to convert?
-			#if '.tga' in btfile:
-			#	print(f"Warning {btfile}: TGA files not supported. Skipping!")
-			#	continue
-			elif 'itemframe_background' in btfile:
+
+			if 'itemframe_background' in btfile:
 				targfn = re.sub('itemframe_background', 'item_frame', btfile)
 			elif btfile.startswith('log_'):
 				targfn = re.sub('log_(.*)\.', '\\1_log', btfile)
@@ -123,10 +118,26 @@ def main():
 				targfn = re.sub('stone_(.*)_smooth', 'polished_\\1', btfile)
 			elif 'grass_' in btfile:
 				targfn = re.sub('grass_', 'grass_block_', btfile)
+			# Handle animation data in .mcmeta files. These have static content, defined above.
+			texture_no_extension, _ = btfile.split('.', 1)
+			if texture_no_extension in animdata:
+				with open(os.path.join(td, 'assets', 'minecraft', 'textures', 'block', targfn + ".mcmeta"), 'w') as mcfh:
+					mcfh.write(animdata[texture_no_extension])
 			# TODO: chiseled sand
-			# We may also bail for textures that are too different in format (e.g. lava flow), or figure out how to convert them
-			# TODO Items
 			shutil.copy(src=os.path.join(cfg.src, 'textures', 'blocks', btfile), dst=os.path.join(td, 'assets', 'minecraft', 'textures', 'block', targfn))
+		# Now, for item textures!
+		for itfile in os.listdir(os.path.join(cfg.src, 'textures', 'items')):
+			if 'texture_set' in itfile:
+				continue
+			if not os.path.isfile(os.path.join(cfg.src, 'textures', 'items', itfile)):
+				continue # Embedded dir?
+			print(f"Processing item texture {itfile}")
+			targfn = itfile
+			if itfile.startswith('bow_standby'):
+				targfn = re.sub('bow_standby', 'bow', itfile)
+			shutil.copy(src=os.path.join(cfg.src, 'textures', 'items', itfile), dst=os.path.join(td, 'assets', 'minecraft', 'textures', 'item', targfn))
+
+
 		shutil.make_archive(f"{orig_metadata['header']['name']}-{orig_metadata['header']['version'][0]}.{orig_metadata['header']['version'][1]}.{orig_metadata['header']['version'][2]}", 'zip', td)
 
 
