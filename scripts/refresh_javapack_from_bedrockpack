@@ -127,14 +127,14 @@ def main():
 			shutil.copy(src=os.path.join(cfg.src, 'textures', 'blocks', btfile), dst=os.path.join(td, 'assets', 'minecraft', 'textures', 'block', targfn))
 		# Now, for item textures!
 		for itfile in os.listdir(os.path.join(cfg.src, 'textures', 'items')):
-			if 'texture_set' in itfile:
-				continue
 			if not os.path.isfile(os.path.join(cfg.src, 'textures', 'items', itfile)):
 				continue # Embedded dir?
 			print(f"Processing item texture {itfile}")
 			targfn = itfile
 			if itfile.startswith('bow_standby'):
 				targfn = re.sub('bow_standby', 'bow', itfile)
+			elif 'wood_' in itfile:
+				targfn = re.sub('wood_', 'wooden_', itfile)
 			shutil.copy(src=os.path.join(cfg.src, 'textures', 'items', itfile), dst=os.path.join(td, 'assets', 'minecraft', 'textures', 'item', targfn))
 
 
