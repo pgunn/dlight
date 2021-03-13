@@ -77,7 +77,7 @@ def main():
 			json.dump(data, mcmf)
 		os.makedirs(os.path.join(td, 'assets', 'minecraft', 'textures', 'block'))
 		os.makedirs(os.path.join(td, 'assets', 'minecraft', 'textures', 'item'))
-		for btfile in os.listdir(os.path.join(cfg.src, 'textures', 'blocks')):
+		for btfile in sorted(os.listdir(os.path.join(cfg.src, 'textures', 'blocks'))):
 			if '_mer' in btfile:
 				continue
 			if 'texture_set' in btfile:
@@ -126,7 +126,7 @@ def main():
 			# TODO: chiseled sand
 			shutil.copy(src=os.path.join(cfg.src, 'textures', 'blocks', btfile), dst=os.path.join(td, 'assets', 'minecraft', 'textures', 'block', targfn))
 		# Now, for item textures!
-		for itfile in os.listdir(os.path.join(cfg.src, 'textures', 'items')):
+		for itfile in sorted(os.listdir(os.path.join(cfg.src, 'textures', 'items'))):
 			if not os.path.isfile(os.path.join(cfg.src, 'textures', 'items', itfile)):
 				continue # Embedded dir?
 			print(f"Processing item texture {itfile}")
