@@ -90,7 +90,9 @@ def main():
 			if 'itemframe_background' in btfile:
 				targfn = re.sub('itemframe_background', 'item_frame', btfile)
 			elif btfile.startswith('log_'):
-				targfn = re.sub('log_(.*)\.', '\\1_log', btfile)
+				targfn = re.sub('log_(.*)\.', '\\1_log.', btfile)
+			elif btfile.startswith('dirt_podzol'):
+				targfn = re.sub('dirt_podzol', 'podzol', btfile)
 			elif btfile.startswith('quartz_ore'):
 				targfn = re.sub('quartz_ore', 'nether_quartz_ore', btfile)
 			elif 'ice_packed' in btfile:
