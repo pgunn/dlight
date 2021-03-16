@@ -21,7 +21,7 @@ from typing import Dict, List, Tuple # for mypy
 #	- fire_1
 #	- soul_fire_0
 #	- soul_fire_1
-# It makes colours, MERs, and texture_set jsons for each.
+# It makes colours for both; does not do MERs (which don't need to match shape and can be static) or json
 #
 # Right now it is unclear how fire_0 and fire_1 are used - are they meant to be
 # contiguous animation frames or are they distinct textures.
@@ -30,7 +30,9 @@ def main():
 	cfg = handle_args()
 
 	fname_rfire_0 = os.path.join(cfg.projdir, 'textures', 'blocks', 'fire_0.png')
+	fname_rfire_1 = os.path.join(cfg.projdir, 'textures', 'blocks', 'fire_1.png')
 	fname_bfire_0 = os.path.join(cfg.projdir, 'textures', 'blocks', 'soul_fire_0.png')
+	fname_bfire_1 = os.path.join(cfg.projdir, 'textures', 'blocks', 'soul_fire_1.png')
 
 	# red and blue data, meaning regular and soul fire
 	rdata		= np.zeros(shape=(cfg.texture_size * cfg.frames, cfg.texture_size, 4), dtype='uint8') # 4 = RGBA
@@ -93,10 +95,9 @@ def main():
 	pil_color_blue	= PIL.Image.fromarray(bdata) # The Matrix was a terrible film
 
 	pil_color_red.save(fname_rfire_0)
+	pil_color_red.save(fname_rfire_1)
 	pil_color_blue.save(fname_bfire_0)
-	#new_ts = original_tsdata.replace('"wool_coloured_gray"', f'"wool_coloured_{colour}"')
-	#with open(targjs, 'w') as targjsh:
-	# targjsh.write(new_ts)
+	pil_color_blue.save(fname_bfire_1)
 	print("Done")
 
 def handle_args():
