@@ -20,6 +20,8 @@
   "textures/blocks/emerald_block",
   "textures/blocks/emerald_ore",
   "textures/blocks/end_stone",
+  "textures/blocks/farmland_dry",
+  "textures/blocks/farmland_wet",
   "textures/blocks/fire_0",
   "textures/blocks/fire_1",
   "textures/blocks/furnace_front_off",
