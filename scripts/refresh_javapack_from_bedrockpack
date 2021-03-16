@@ -116,6 +116,10 @@ def main():
 				targfn = re.sub('portal\.', 'nether_portal.', btfile)
 			elif btfile.startswith('torch_on.'):
 				targfn = re.sub('torch_on\.', 'torch.', btfile)
+			elif btfile.startswith('farmland_wet.'):
+				targfn = re.sub('farmland_wet', 'farmland_moist', btfile)
+			elif btfile.startswith('farmland_dry.'):
+				targfn = re.sub('farmland_dry', 'farmland', btfile)
 			elif btfile.startswith('web.'):
 				targfn = re.sub('web\.', 'cobweb.', btfile)
 			elif '_smooth.' in btfile: # polished/smooth bricks
