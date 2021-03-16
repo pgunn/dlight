@@ -1,0 +1,137 @@
+#!/usr/bin/env python
+
+import argparse
+import code # for code.interact(local=dict(globals(), **locals()) ) debugging
+import math
+import os
+import PIL # Pillow please
+import PIL.Image
+import numpy as np
+from typing import Dict, List, Tuple # for mypy
+
+######################
+# make_fire
+#
+# This looks at the project dir for a texture pack and generates fire textures
+#
+# This works entirely from numpy, and does not use any templates.
+#
+# It generates:
+#	- fire_0
+#	- fire_1
+#	- soul_fire_0
+#	- soul_fire_1
+# It makes colours, MERs, and texture_set jsons for each.
+#
+# Right now it is unclear how fire_0 and fire_1 are used - are they meant to be
+# contiguous animation frames or are they distinct textures.
+
+def main():
+	cfg = handle_args()
+
+	fname_rfire_0 = os.path.join(cfg.projdir, 'textures', 'blocks', 'fire_0.png')
+	fname_bfire_0 = os.path.join(cfg.projdir, 'textures', 'blocks', 'soul_fire_0.png')
+
+	# red and blue data, meaning regular and soul fire
+	rdata		= np.zeros(shape=(cfg.texture_size * cfg.frames, cfg.texture_size, 4), dtype='uint8') # 4 = RGBA
+	bdata		= np.zeros(shape=(cfg.texture_size * cfg.frames, cfg.texture_size, 4), dtype='uint8') # 4 = RGBA
+	rdata_mer	= np.zeros(shape=(cfg.texture_size * cfg.frames, cfg.texture_size, 3), dtype='uint8') # 3 = RGB (no alpha channel)
+	bdata_mer	= np.zeros(shape=(cfg.texture_size * cfg.frames, cfg.texture_size, 3), dtype='uint8') # 3 = RGB (no alpha channel)
+
+	# First, we want to construct static (for now) gradients, one for soul flame and the other for regular flame
+	# Let's try:
+	# Flame:	133,54,0 -> 215,155,65	-> 243,218,111
+	# Soul Flame:	0,35,115 -> 53, 126,204	-> 118,184,255
+	# Knowing that the max height will be pretty rare, and that we prefer a 2-step gradient...
+	grad_rflame = np.zeros(shape=(cfg.flame_height, 3), dtype='uint8') # red
+	grad_bflame = np.zeros(shape=(cfg.flame_height, 3), dtype='uint8') # blue
+	rcolour_1 = np.array((133, 54, 0))
+	rcolour_2 = np.array((215, 155, 65))
+	rcolour_3 = np.array((243, 218, 111))
+	bcolour_1 = np.array((0, 35, 115))
+	bcolour_2 = np.array((53, 126, 204))
+	bcolour_3 = np.array((118, 184, 255))
+	# We won't ever actually hit the top value, and the mid value may actually be excluded, but the gradient will be roughly
+	# right and that's what we're going for.
+
+	for n in range(0, int(cfg.flame_height/2)):
+		grad_rflame[cfg.flame_height - (n+1), :] = rcolour_1 + n*(rcolour_2 - rcolour_1)/int(cfg.flame_height/2)
+	for n in range(0, int(cfg.flame_height/2)):
+		grad_bflame[cfg.flame_height - (n+1), :] = bcolour_1 + n*(bcolour_2 - bcolour_1)/int(cfg.flame_height/2)
+	# Mid
+	for n in range(int(cfg.flame_height/2), cfg.flame_height):
+		grad_rflame[cfg.flame_height - (n+1), :] = rcolour_2 + (n-cfg.flame_height/2)*(rcolour_3 - rcolour_2)/int(cfg.flame_height/2)
+	for n in range(int(cfg.flame_height/2), cfg.flame_height):
+		grad_bflame[cfg.flame_height - (n+1), :] = bcolour_2 + (n-cfg.flame_height/2)*(bcolour_3 - bcolour_2)/int(cfg.flame_height/2)
+
+	# On to the actual data filling..
+	# We want each left-right position in the frame to have height unrelated to its neighbours, but to have some continuity with its
+	#	surrounding frames.
+	# This is achieved with two strategies:
+	#	1) Each column, across its frames, has its height managed as a sine wave between min and max values.
+	#	2) Columns are shuffled after all the height and data is generated
+
+	for frameid in range(0, cfg.frames):
+		print(f"Computing frame {frameid}")
+		offset = frameid * cfg.texture_size # This is an X offset we use to recognise successive frames of the animation
+		for column in range(0, cfg.texture_size):
+			height_here = height_at_col(frameid, column, cfg.flame_height, cfg.texture_size)
+			thiscol_r = np.zeros(shape=(cfg.texture_size, 3), dtype='uint8') # Start blank
+			thiscol_b = np.zeros(shape=(cfg.texture_size, 3), dtype='uint8') # Start blank
+			thiscol_r[cfg.texture_size-height_here:cfg.texture_size, :] = grad_rflame[0:height_here, :] # This favours the top of the flame over the bottom
+			thiscol_b[cfg.texture_size-height_here:cfg.texture_size, :] = grad_bflame[0:height_here, :]
+
+			rdata[offset:offset+cfg.texture_size, column, 0:3] = thiscol_r # Copy the data in
+			bdata[offset:offset+cfg.texture_size, column, 0:3] = thiscol_b
+			rdata[offset+cfg.texture_size-height_here:offset+cfg.texture_size, column, 3] = 255 # No transparency where there is flame
+			bdata[offset+cfg.texture_size-height_here:offset+cfg.texture_size, column, 3] = 255
+	# Shuffle the columns
+	rdata = rdata[:, np.random.permutation(rdata.shape[1]), :]
+	bdata = bdata[:, np.random.permutation(bdata.shape[1]), :]
+
+	pil_color_red	= PIL.Image.fromarray(rdata) # No, this is not a Matrix reference
+	pil_color_blue	= PIL.Image.fromarray(bdata) # The Matrix was a terrible film
+
+	pil_color_red.save(fname_rfire_0)
+	pil_color_blue.save(fname_bfire_0)
+	#new_ts = original_tsdata.replace('"wool_coloured_gray"', f'"wool_coloured_{colour}"')
+	#with open(targjs, 'w') as targjsh:
+	# targjsh.write(new_ts)
+	print("Done")
+
+def handle_args():
+	parser = argparse.ArgumentParser(description="Make fire variants")
+	parser.add_argument("projdir",	help="Project Dir")
+	parser.add_argument("--texture_size",	type=int, default=64,	help="How big are the generated textures? 64=default")
+	parser.add_argument("--flame_height",	type=int, default=48,	help="From the bottom, how tall should the textures be at max?")
+	parser.add_argument("--frames",		type=int, default=32,	help="How many frames?")
+	ret = parser.parse_args()
+	if ret.flame_height < 3:
+		raise Exception("Flame height must be at least 2")
+	return ret
+
+#####
+
+def height_at_col(frameid:int, colid:int, frame_maxheight:int, texture_size:int) -> int:
+	# This is responsible for figuring out the height of the flames, within a particular column
+	# in a particular frame. Half the height adjustment comes from the sine, and half from the column
+	# TODO: Work in a stable(?) shuffle so we don't need to shuffle externally
+	# TODO: Is having two separate influencers what we want? This results in the entire height going up and
+	#	down, which isn't quite what I had in mind.
+	if frame_maxheight > texture_size:
+		raise Exception("Max frame height > texture_size")
+	average_height = frame_maxheight / 2.0 # We'll deal with floats for as long as we can
+	# Next, we compute two adjustments to *add* to average_height. Each of these should be in a range of (-frame_maxheight/4) <= n <= (frame_maxheight/4)
+	# Why 4? Each contributes half, and we want to allow height to go down to 0 (in this part of the computation).
+	adjustment_from_wave  = math.cos(frameid/5) * (frame_maxheight/4)
+	adjustment_from_frame = (colid - (texture_size / 2))/texture_size * (frame_maxheight/2)
+	# Show our work
+	this_height = average_height + adjustment_from_frame + adjustment_from_wave
+	print(f"\t\tthis_height:{this_height} = average_height:{average_height} + adjustment_from_wave:{adjustment_from_wave} + adjustment_from_frame:{adjustment_from_frame}")
+	this_height = int(this_height)
+	if this_height > texture_size:
+		raise Exception(f"height_at_col() went over max height with frameid:{frameid} colid:{colid} frame_maxheight:{frame_maxheight} texture_size:{texture_size}")
+	return this_height
+
+#####
+main()
