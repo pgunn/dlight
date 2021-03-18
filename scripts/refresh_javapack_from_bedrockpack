@@ -126,6 +126,11 @@ def main():
 				targfn = re.sub('stone_(.*)_smooth', 'polished_\\1', btfile)
 			elif 'grass_' in btfile:
 				targfn = re.sub('grass_', 'grass_block_', btfile)
+
+			# Section 2 - these all modify targfn in-place
+			if 'big_oak' in targfn:
+				targfn = re.sub('big_oak', 'dark_oak', targfn)
+
 			# Handle animation data in .mcmeta files. These have static content, defined above.
 			texture_no_extension, _ = btfile.split('.', 1)
 			if texture_no_extension in animdata:
