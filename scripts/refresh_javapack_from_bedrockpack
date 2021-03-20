@@ -91,6 +91,11 @@ def main():
 				targfn = re.sub('itemframe_background', 'item_frame', btfile)
 			elif btfile.startswith('log_'):
 				targfn = re.sub('log_(.*)\.', '\\1_log.', btfile)
+			elif btfile.startswith('door_'): # Bedrock's terminology for doors: door_WOOD_upperlower
+				targfn = re.sub('_upper', '_door_top', btfile)
+				targfn = re.sub('_lower', '_door_bottom', targfn)
+				targfn = re.sub('^door_', '', targfn)
+				# Oddly, doors are already dark_oak rather than big_oak, so that substitution doesn't need to happen
 			elif btfile.startswith('dirt_podzol'):
 				targfn = re.sub('dirt_podzol', 'podzol', btfile)
 			elif btfile.startswith('quartz_ore'):
