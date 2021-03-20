@@ -19,6 +19,8 @@
   "textures/blocks/dirt_podzol_top",
   "textures/blocks/door_acacia_lower",
   "textures/blocks/door_acacia_upper",
+  "textures/blocks/door_iron_lower",
+  "textures/blocks/door_iron_upper",
   "textures/blocks/emerald_block",
   "textures/blocks/emerald_ore",
   "textures/blocks/end_stone",
