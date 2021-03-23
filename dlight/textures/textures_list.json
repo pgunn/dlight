@@ -31,6 +31,8 @@
   "textures/blocks/door_jungle_upper",
   "textures/blocks/door_spruce_lower",
   "textures/blocks/door_spruce_upper",
+  "textures/blocks/door_wood_upper",
+  "textures/blocks/door_wood_lower",
   "textures/blocks/emerald_block",
   "textures/blocks/emerald_ore",
   "textures/blocks/end_stone",
