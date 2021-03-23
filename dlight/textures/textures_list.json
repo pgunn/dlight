@@ -27,6 +27,8 @@
   "textures/blocks/door_dark_oak_upper",
   "textures/blocks/door_iron_lower",
   "textures/blocks/door_iron_upper",
+  "textures/blocks/door_jungle_lower",
+  "textures/blocks/door_jungle_upper",
   "textures/blocks/emerald_block",
   "textures/blocks/emerald_ore",
   "textures/blocks/end_stone",
