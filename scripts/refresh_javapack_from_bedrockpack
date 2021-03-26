@@ -91,6 +91,10 @@ def main():
 				targfn = re.sub('itemframe_background', 'item_frame', btfile)
 			elif btfile.startswith('log_'):
 				targfn = re.sub('log_(.*)\.', '\\1_log.', btfile)
+			elif btfile.startswith('concrete_powder_'):
+				targfn = re.sub('concrete_powder_(.*)\.', '\\1_concrete_powder.', btfile)
+			elif btfile.startswith('concrete_'):
+				targfn = re.sub('concrete_(.*)\.', '\\1_concrete.', btfile)
 			elif btfile.startswith('door_'): # Bedrock's terminology for doors: door_WOOD_upperlower
 				targfn = re.sub('_upper', '_door_top', btfile)
 				targfn = re.sub('_lower', '_door_bottom', targfn)
