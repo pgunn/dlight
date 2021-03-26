@@ -24,10 +24,10 @@ from typing import Dict, List, Tuple # for mypy
 colours_to_data = {
 		'black': 	{'avg_hue': [80, 80, 80],	'render': True},
 		'blue': 	{'avg_hue': [106, 108, 255],	'render': True},
-		'brown':	{'avg_hue': [235, 181, 137],	'render': True},
+		'brown':	{'avg_hue': [138, 109, 51],	'render': True},
 		'cyan': 	{'avg_hue': [138, 228, 242],	'render': True},
 		'gray': 	{'avg_hue': [150, 150, 150],	'render': True},
-		'green': 	{'avg_hue': [110, 226, 140],	'render': True},
+		'green': 	{'avg_hue': [51, 138, 68],	'render': True},
 		'light_blue': 	{'avg_hue': [180, 250, 250],	'render': True},
 		'lime': 	{'avg_hue': [1150, 244, 150],	'render': True},
 		'magenta': 	{'avg_hue': [255, 155, 255],	'render': True},
