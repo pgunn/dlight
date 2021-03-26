@@ -1,0 +1,150 @@
+#!/usr/bin/env python
+
+import argparse
+import code # for code.interact(local=dict(globals(), **locals()) ) debugging
+import json
+import os
+import PIL # Pillow please
+import PIL.Image
+import numpy as np
+from typing import Dict, List, Tuple # for mypy
+
+######################
+# make_concrete
+#
+# This looks at the project dir for a texture pack and makes both concrete powder
+# and concrete textures.
+# It also creates the .texture_set.json files
+#
+# This does not use a template.
+
+
+# NOTE: We are using the American spelling of coloured here because minecraft expects it in filenames
+
+colours_to_data = {
+		'black': 	{'avg_hue': [80, 80, 80],	'render': True},
+		'blue': 	{'avg_hue': [106, 108, 255],	'render': True},
+		'brown':	{'avg_hue': [235, 181, 137],	'render': True},
+		'cyan': 	{'avg_hue': [138, 228, 242],	'render': True},
+		'gray': 	{'avg_hue': [150, 150, 150],	'render': True},
+		'green': 	{'avg_hue': [110, 226, 140],	'render': True},
+		'light_blue': 	{'avg_hue': [180, 250, 250],	'render': True},
+		'lime': 	{'avg_hue': [1150, 244, 150],	'render': True},
+		'magenta': 	{'avg_hue': [255, 155, 255],	'render': True},
+		'orange': 	{'avg_hue': [1505, 168, 100],	'render': True},
+		'pink': 	{'avg_hue': [210, 158, 166],	'render': True},
+		'purple': 	{'avg_hue': [234, 75, 234],	'render': True},
+		'red': 		{'avg_hue': [243, 94, 124],	'render': True},
+		'silver': 	{'avg_hue': [223, 223, 223],	'render': True}, # light gray
+		'white': 	{'avg_hue': [240, 240, 240],	'render': True},
+		'yellow': 	{'avg_hue': [241, 241, 134],	'render': True},
+		}
+
+def main():
+	cfg = handle_args()
+
+	for colour in sorted(colours_to_data.keys()):
+		print(f"Colour: {colour}")
+		if not colours_to_data[colour]['render']:
+			print("\tSkipping due to policy")
+			continue
+
+		targ_pow_fn = os.path.join(cfg.projdir, 'textures', 'blocks', f"concrete_powder_{colour}.png")
+		targ_sol_fn = os.path.join(cfg.projdir, 'textures', 'blocks', f"concrete_{colour}.png")
+		targ_pow_js = os.path.join(cfg.projdir, 'textures', 'blocks', f"concrete_powder_{colour}.texture_set.json")
+		targ_sol_js = os.path.join(cfg.projdir, 'textures', 'blocks', f"concrete_{colour}.texture_set.json")
+
+		data_pow = np.zeros(shape=(cfg.size, cfg.size, 3), dtype='uint8') # RGB
+		data_sol = np.zeros(shape=(cfg.size, cfg.size, 3), dtype='uint8') # RGB
+
+		###############################
+		# With both the powder and solid concrete textures, we start out filling the entire thing with
+		# the desired colour, and then later we'll iterate over them and add sprinkles of brighter and darker.
+		# The solid block will additionally get a (mild) border drawn around the edges.
+
+		# Step 1: Static fill
+		data_pow[:,:] = colours_to_data[colour]['avg_hue']
+		data_sol[:,:] = colours_to_data[colour]['avg_hue']
+
+		# Step 2: Use masks to replace values in each
+		grey_colour = (128,128,128)
+
+		powder_div = 30
+		data_pow[make_mask(powder_div, cfg.size)] = make_colour_brighter(	colours_to_data[colour]['avg_hue'], 4)
+		data_pow[make_mask(powder_div, cfg.size)] = make_colour_dimmer(		colours_to_data[colour]['avg_hue'], 4)
+		data_pow[make_mask(powder_div, cfg.size)] = grey_colour
+
+		solid_div = 120
+		data_sol[make_mask(solid_div, cfg.size)] = make_colour_brighter(	colours_to_data[colour]['avg_hue'], 12)
+		data_sol[make_mask(solid_div, cfg.size)] = make_colour_dimmer(		colours_to_data[colour]['avg_hue'], 12)
+		data_sol[make_mask(solid_div*4, cfg.size)] = grey_colour
+
+		# Last step: Fill edges of solid block with dark grey
+		# is 1 pixel wide enough of a border? Should we have another CLI arg to
+		# do 2 pixels wide of slightly varying shades?
+		border_collie = (40, 40, 40) # Good boy
+		data_sol[0,:] = border_collie
+		data_sol[:,0] = border_collie
+		data_sol[cfg.size - 1,:] = border_collie
+		data_sol[:, cfg.size - 1] = border_collie
+
+		pow_pil = PIL.Image.fromarray(data_pow)
+		sol_pil = PIL.Image.fromarray(data_sol)
+		pow_pil.save(targ_pow_fn)
+		sol_pil.save(targ_sol_fn)
+
+		new_ts_pow = json.dumps(	{
+						"format_version": "1.16.100",
+						"minecraft:texture_set":
+							{
+							"color": f"concrete_powder_{colour}",
+							"metalness_emissive_roughness": "concrete_powder_shared_mer"
+							}
+						})
+		new_ts_sol = json.dumps(	{
+						"format_version": "1.16.100",
+						"minecraft:texture_set":
+							{
+							"color": f"concrete_{colour}",
+							"metalness_emissive_roughness": "concrete_shared_mer"
+							}
+						})
+
+
+		with open(targ_pow_js, 'w') as targ_pow_jsh:
+			targ_pow_jsh.write(new_ts_pow)
+		with open(targ_sol_js, 'w') as targ_sol_jsh:
+			targ_sol_jsh.write(new_ts_sol)
+	print("Done")
+
+def handle_args():
+	parser = argparse.ArgumentParser(description="Make coloured glass texture variants")
+	parser.add_argument("projdir",	help="Project Dir")
+	parser.add_argument("--size",	type=int, default=64, help="edge length for size of textures")
+	ret = parser.parse_args()
+	return ret
+
+#####
+
+def make_mask(divisor:int, mask_edgelen:int) -> np.ndarray:
+	# This makes a mask where (roughly) 1/divisor of the pixels are included. A value like 2 gets you about half.
+	# Much higher values (lower percentages) are probably the norm for callers
+	return np.random.randint(0, divisor, size=(mask_edgelen, mask_edgelen)) < 1
+
+def make_colour_brighter(orig_color:Tuple[int,int,int], degree:int) -> Tuple[int, int, int]:
+	# This does a weighted blend between the provided colour and white, with degree deciding on the weight (towards the original colour).
+	return (
+		(orig_color[0] * degree + 255) / (degree + 1),
+		(orig_color[1] * degree + 255) / (degree + 1),
+		(orig_color[2] * degree + 255) / (degree + 1))
+
+def make_colour_dimmer(orig_color:Tuple[int,int,int], degree:int) -> Tuple[int, int, int]:
+	# Same idea as make_colour_brighter, except it blends between the provided colour and black.
+	return (
+		(orig_color[0] * degree) / (degree + 1),
+		(orig_color[1] * degree) / (degree + 1),
+		(orig_color[2] * degree) / (degree + 1))
+
+
+#####
+main()
