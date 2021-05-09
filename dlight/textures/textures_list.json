@@ -215,6 +215,8 @@
   "textures/blocks/tnt_top",
   "textures/blocks/torch_on",
   "textures/blocks/vine",
+  "textures/blocks/warped_nylium_side",
+  "textures/blocks/warped_nylium_top",
   "textures/blocks/water_overlay",
   "textures/blocks/water_flow",
   "textures/blocks/water_flow_grey",
