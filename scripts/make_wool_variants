@@ -105,8 +105,6 @@ def main():
 def handle_args():
 	parser = argparse.ArgumentParser(description="Make coloured glass texture variants")
 	parser.add_argument("projdir",	help="Project Dir")
-	parser.add_argument("--opacity_main",	type=int, default=20,	help="For main body of block, 0-255 for how opaque")
-	parser.add_argument("--opacity_style",	type=int, default=200,	help="For style parts of block, 0-255 for how opaque")
 	ret = parser.parse_args()
 	return ret
 
