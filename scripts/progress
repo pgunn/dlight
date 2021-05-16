@@ -28,16 +28,12 @@ tfold_misc = ['carried']
 def main():
 	cfg = handle_args()
 	manifest_file     = os.path.join(cfg.projdir, 'manifest.json')
-	texture_list_file = os.path.join(cfg.projdir, 'textures', 'textures_list.json')
-	block_texture_dir = os.path.join(cfg.projdir, 'textures', 'blocks')
 
 	manifest	= jload(manifest_file)
-	texture_list	= jload(texture_list_file)
-	texture_ref	= jload(cfg.reference_list)
+	texture_list	= os.listdir(f"{cfg.projdir}/textures/blocks") # build from f{projdir}/textures/blocks/*
+	texture_ref	= os.listdir(f"{cfg.reference}/textures/blocks") # build from f{reference}/textures/blocks/*
 
 	# For now we're going to focus on block textures
-	texture_list = list(filter(lambda x: '/blocks/' in x, texture_list))
-	texture_ref  = list(filter(lambda x: '/blocks/' in x, texture_ref))
 
 	for texture_we_have in texture_list:
 		if texture_we_have not in texture_ref:
@@ -70,7 +66,7 @@ def main():
 def handle_args():
 	parser = argparse.ArgumentParser(description="Check Block Textures")
 	parser.add_argument("projdir",	help="Project Dir")
-	parser.add_argument("--reference_list",	default="nvidia_pbr_example/textures/textures_list.json", help="Reference textures_list.json")
+	parser.add_argument("--reference",	default="vanilla-1.16.200", help="Reference (vanilla) texture pack")
 	parser.add_argument("--summary",	action="store_true", help="Only summarise")
 	parser.add_argument("--verbose",	action="store_true", help="Be noisier")
 	ret = parser.parse_args()
