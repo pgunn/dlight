@@ -66,7 +66,7 @@ def main():
 def handle_args():
 	parser = argparse.ArgumentParser(description="Check Block Textures")
 	parser.add_argument("projdir",	help="Project Dir")
-	parser.add_argument("--reference",	default="vanilla-1.16.200", help="Reference (vanilla) texture pack")
+	parser.add_argument("--reference",	default="vanilla-1.17", help="Reference (vanilla) texture pack")
 	parser.add_argument("--summary",	action="store_true", help="Only summarise")
 	parser.add_argument("--verbose",	action="store_true", help="Be noisier")
 	ret = parser.parse_args()
